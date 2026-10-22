@@ -2,14 +2,14 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>LUIPAGE 5D</title>
 <style>
   :root{
     --bg:#0a0612;--panel:rgba(255,255,255,.055);--stroke:rgba(255,255,255,.10);
     --neon:#b14aed;--neon2:#00e5ff;--gold:#ffd23f;--txt:#eae6f5;--muted:#9a90b8;
   }
-  *{box-sizing:border-box;margin:0;padding:0}
+  *{box-sizing:border-box;margin:0;padding:0;}
   body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--bg);
     color:var(--txt);min-height:100vh;overflow-x:hidden;}
   body::before{content:'';position:fixed;inset:0;z-index:-1;
@@ -32,7 +32,7 @@
   @keyframes slide{ to{ background-position:300% 0; } }
   .login-sub{color:var(--muted);font-size:.88rem;margin-bottom:26px;}
   .login-btn{width:100%;cursor:pointer;font:inherit;font-weight:800;font-size:.95rem;
-    padding:14px 18px;border-radius:14px;border:none;transition:.2s;
+    padding:14px 18px;border-radius:14px;border:none;transition:.2s;touch-action:manipulation;
     display:flex;align-items:center;justify-content:center;gap:10px;}
   .login-btn.google{background:#fff;color:#111;}
   .login-btn.google:hover{ transform:translateY(-2px);box-shadow:0 8px 24px rgba(255,255,255,.2); }
@@ -53,7 +53,7 @@
   /* ---------- HEADER ---------- */
   header{position:sticky;top:0;z-index:50;backdrop-filter:blur(16px);
     background:rgba(10,6,18,.72);border-bottom:1px solid var(--stroke);}
-  .header-inner{max-width:1100px;margin:0 auto;padding:14px 18px;display:flex;
+  .header-inner{max-width:1100px;margin:0 auto;padding:12px 16px;display:flex;
     align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;}
   .logo{font-size:1.45rem;font-weight:900;letter-spacing:1.5px;
     background:linear-gradient(90deg,#b14aed,#00e5ff,#ffd23f,#b14aed);background-size:300% 100%;
@@ -61,18 +61,18 @@
     animation:slide 6s linear infinite;cursor:default;user-select:none;}
   .logo .five{ font-size:.8em; opacity:.9 }
   .header-actions{display:flex;align-items:center;gap:10px;}
-  .coins-pill{display:flex;align-items:center;gap:9px;padding:9px 16px;border-radius:999px;
+  .coins-pill{display:flex;align-items:center;gap:9px;padding:8px 14px;border-radius:999px;
     background:linear-gradient(135deg, rgba(255,210,63,.16), rgba(255,210,63,.05));
-    border:1px solid rgba(255,210,63,.4);font-weight:800;font-size:1.05rem;
+    border:1px solid rgba(255,210,63,.4);font-weight:800;font-size:1rem;
     box-shadow:0 0 22px rgba(255,210,63,.18);}
   .coins-pill small{ font-weight:600;color:var(--muted);font-size:.72rem;letter-spacing:.5px }
   .coins-pill.pop{ animation:pop .35s ease }
   @keyframes pop{ 50%{ transform:scale(1.12); } }
 
   .user-menu{position:relative;}
-  .user-menu-trigger{cursor:pointer;width:44px;height:44px;border-radius:12px;display:flex;
+  .user-menu-trigger{cursor:pointer;width:42px;height:42px;border-radius:12px;display:flex;
     align-items:center;justify-content:center;font-size:1.4rem;background:var(--panel);
-    border:1px solid var(--stroke);transition:.2s;}
+    border:1px solid var(--stroke);transition:.2s;background-size:cover;background-position:center;}
   .user-menu-trigger:hover{ border-color:var(--neon);transform:scale(1.05); }
   .user-menu-dropdown{position:absolute;top:calc(100% + 8px);right:0;min-width:200px;background:#140b22;
     border:1px solid var(--stroke);border-radius:14px;padding:6px;display:none;
@@ -86,25 +86,27 @@
   .user-menu-dropdown button.hide{ display:none; }
   .user-menu-dropdown hr{border:none;border-top:1px solid var(--stroke);margin:6px 0;}
 
-  /* ---------- TABS ---------- */
-  .tabs{max-width:1100px;margin:22px auto 0;padding:0 18px;display:flex;gap:10px;flex-wrap:wrap;}
-  .tab{cursor:pointer;font:inherit;font-weight:700;font-size:.92rem;padding:11px 18px;
-    border-radius:14px;color:var(--muted);background:var(--panel);border:1px solid var(--stroke);transition:.22s;}
+  /* ---------- TABS (Scrollable en móvil) ---------- */
+  .tabs-wrapper{max-width:1100px;margin:20px auto 0;padding:0 16px;overflow-x:auto;white-space:nowrap;scrollbar-width:none;}
+  .tabs-wrapper::-webkit-scrollbar{display:none;}
+  .tabs{display:inline-flex;gap:10px;padding-bottom:4px;}
+  .tab{cursor:pointer;font:inherit;font-weight:700;font-size:.9rem;padding:10px 16px;
+    border-radius:14px;color:var(--muted);background:var(--panel);border:1px solid var(--stroke);transition:.22s;touch-action:manipulation;}
   .tab:hover{ color:var(--txt); transform:translateY(-2px) }
   .tab.active{color:#0a0612;background:linear-gradient(135deg,#b14aed,#00e5ff);
     border-color:transparent;box-shadow:0 8px 26px rgba(177,74,237,.45);}
 
-  main{ max-width:1100px;margin:0 auto;padding:24px 18px 70px }
+  main{ max-width:1100px;margin:0 auto;padding:20px 16px 70px }
   .panel{ display:none; animation:fade .35s ease }
   .panel.active{ display:block }
   @keyframes fade{ from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:none} }
-  h2{font-size:1.6rem;letter-spacing:.5px;margin-bottom:6px;
+  h2{font-size:1.5rem;letter-spacing:.5px;margin-bottom:6px;
     background:linear-gradient(90deg,#fff,#b9a8e8);-webkit-background-clip:text;
     background-clip:text;color:transparent;}
-  .sub{ color:var(--muted);font-size:.92rem;margin-bottom:20px }
+  .sub{ color:var(--muted);font-size:.9rem;margin-bottom:20px }
 
   /* ---------- CARDS ---------- */
-  .cards-grid{display:grid;gap:18px;grid-template-columns:repeat(auto-fill,minmax(196px,1fr));perspective:900px;}
+  .cards-grid{display:grid;gap:16px;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));perspective:900px;}
   .card{position:relative;border-radius:18px;padding:14px;
     background:linear-gradient(160deg,var(--c1),var(--c2));color:#0b0712;
     box-shadow:0 12px 28px rgba(0,0,0,.5);transition:transform .25s ease, box-shadow .25s ease;
@@ -112,94 +114,107 @@
   .card::after{content:'';position:absolute;inset:0;pointer-events:none;
     background:linear-gradient(120deg, rgba(255,255,255,.55), transparent 42%, transparent 60%, rgba(255,255,255,.22));
     opacity:.55;}
-  .card:hover{transform:translateY(-8px) rotateX(6deg) rotateY(-6deg) scale(1.035);
+  .card:hover{transform:translateY(-6px) rotateX(4deg) rotateY(-4deg) scale(1.02);
     box-shadow:0 22px 46px rgba(177,74,237,.45);}
   .card-top{ display:flex;justify-content:space-between;align-items:flex-start;font-weight:900 }
-  .rating{ font-size:1.6rem;line-height:1 }
-  .pos{ font-size:.72rem;letter-spacing:1px;background:rgba(0,0,0,.22);color:#fff;padding:3px 8px;border-radius:8px }
-  .card-emoji{ font-size:3.2rem;text-align:center;margin:8px 0 4px;filter:drop-shadow(0 6px 10px rgba(0,0,0,.35)) }
-  .card-name{ font-weight:900;font-size:1rem;text-align:center;line-height:1.15 }
-  .card-club{ text-align:center;font-size:.74rem;font-weight:700;opacity:.72;margin-top:3px;letter-spacing:.4px }
+  .rating{ font-size:1.5rem;line-height:1 }
+  .pos{ font-size:.7rem;letter-spacing:1px;background:rgba(0,0,0,.22);color:#fff;padding:3px 8px;border-radius:8px }
+  .card-emoji{ font-size:3rem;text-align:center;margin:8px 0 4px;filter:drop-shadow(0 6px 10px rgba(0,0,0,.35)) }
+  .card-name{ font-weight:900;font-size:.95rem;text-align:center;line-height:1.15 }
+  .card-club{ text-align:center;font-size:.72rem;font-weight:700;opacity:.72;margin-top:3px;letter-spacing:.4px }
   .card-bottom{display:flex;align-items:center;justify-content:space-between;gap:8px;
     margin-top:12px;padding-top:10px;border-top:1px solid rgba(0,0,0,.18);}
-  .price{ font-weight:900;font-size:.92rem }
-  .buy{cursor:pointer;font:inherit;font-weight:800;font-size:.78rem;padding:8px 13px;border-radius:10px;
-    border:none;background:#0b0712;color:#fff;transition:.2s;}
+  .price{ font-weight:900;font-size:.9rem }
+  .buy{cursor:pointer;font:inherit;font-weight:800;font-size:.75rem;padding:8px 12px;border-radius:10px;
+    border:none;background:#0b0712;color:#fff;transition:.2s;touch-action:manipulation;}
   .buy:hover:not(:disabled){ background:#1d1230;transform:scale(1.06) }
   .buy:disabled{ background:rgba(11,7,18,.35);color:rgba(255,255,255,.75);cursor:default }
   .card.owned{ box-shadow:0 0 0 3px #ffd23f, 0 12px 30px rgba(255,210,63,.35) }
   .owned-tag{position:absolute;top:10px;right:10px;z-index:2;background:#ffd23f;color:#0b0712;
-    font-weight:900;font-size:.68rem;padding:4px 9px;border-radius:999px;letter-spacing:.5px;}
+    font-weight:900;font-size:.65rem;padding:4px 9px;border-radius:999px;letter-spacing:.5px;}
   .trade-btn{position:absolute;bottom:12px;left:12px;z-index:3;cursor:pointer;font:inherit;
-    font-weight:800;font-size:.72rem;padding:6px 11px;border-radius:9px;
+    font-weight:800;font-size:.7rem;padding:6px 11px;border-radius:9px;
     background:rgba(0,229,255,.2);color:#0b0712;border:1px solid rgba(0,229,255,.5);
-    transition:.2s;backdrop-filter:blur(4px);}
+    transition:.2s;backdrop-filter:blur(4px);touch-action:manipulation;}
   .trade-btn:hover{ background:#00e5ff;transform:scale(1.08) }
 
   /* ---------- SHOP ITEMS ---------- */
-  .items-grid{display:grid;gap:16px;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));}
-  .shop-item{position:relative;border-radius:18px;padding:18px;
+  .items-grid{display:grid;gap:16px;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));}
+  .shop-item{position:relative;border-radius:18px;padding:16px;
     background:linear-gradient(160deg,var(--c1),var(--c2));color:#0b0712;
     box-shadow:0 12px 28px rgba(0,0,0,.4);transition:.25s;overflow:hidden;}
   .shop-item:hover{ transform:translateY(-6px);box-shadow:0 20px 40px rgba(0,0,0,.55); }
-  .shop-item .cat-tag{position:absolute;top:12px;left:12px;background:rgba(0,0,0,.35);color:#fff;
-    font-size:.66rem;font-weight:900;padding:4px 9px;border-radius:8px;letter-spacing:.5px;}
-  .shop-item .s-emoji{font-size:3.4rem;text-align:center;display:block;margin:6px 0 8px;
+  .shop-item .cat-tag{position:absolute;top:10px;left:10px;background:rgba(0,0,0,.35);color:#fff;
+    font-size:.65rem;font-weight:900;padding:4px 9px;border-radius:8px;letter-spacing:.5px;}
+  .shop-item .s-emoji{font-size:3rem;text-align:center;display:block;margin:6px 0 8px;
     filter:drop-shadow(0 6px 10px rgba(0,0,0,.35));}
-  .shop-item .s-name{font-weight:900;font-size:1.02rem;text-align:center;}
-  .shop-item .s-desc{font-size:.78rem;text-align:center;opacity:.78;margin-top:6px;line-height:1.4;
+  .shop-item .s-name{font-weight:900;font-size:1rem;text-align:center;}
+  .shop-item .s-desc{font-size:.75rem;text-align:center;opacity:.78;margin-top:6px;line-height:1.4;
     min-height:2.2em;}
   .shop-item .s-bottom{display:flex;align-items:center;justify-content:space-between;gap:8px;
     margin-top:14px;padding-top:12px;border-top:1px solid rgba(0,0,0,.18);}
-  .shop-item .s-price{font-weight:900;font-size:.92rem;}
-  .shop-item .s-owned{font-weight:900;font-size:.75rem;color:#0b0712;background:#ffd23f;
+  .shop-item .s-price{font-weight:900;font-size:.9rem;}
+  .shop-item .s-owned{font-weight:900;font-size:.72rem;color:#0b0712;background:#ffd23f;
     padding:4px 9px;border-radius:999px;letter-spacing:.3px;}
 
   /* ---------- TOP ---------- */
   .top-list{ display:flex;flex-direction:column;gap:10px }
-  .rank{display:flex;align-items:center;gap:14px;padding:14px 18px;border-radius:16px;
+  .rank{display:flex;align-items:center;gap:12px;padding:12px 16px;border-radius:16px;
     background:var(--panel);border:1px solid var(--stroke);transition:.2s;}
   .rank:hover{ transform:translateX(5px);border-color:rgba(177,74,237,.55) }
-  .rank .pos-num{font-weight:900;font-size:1.05rem;min-width:42px;text-align:center;color:var(--muted);}
-  .rank .who{ flex:1;font-weight:800;font-size:.98rem }
-  .rank .who small{ display:block;font-weight:600;font-size:.73rem;color:var(--muted);margin-top:2px }
-  .rank .amount{ font-weight:900;color:var(--gold);font-size:1.02rem;white-space:nowrap }
+  .rank .pos-num{font-weight:900;font-size:1rem;min-width:32px;text-align:center;color:var(--muted);}
+  .rank .who{ flex:1;font-weight:800;font-size:.95rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .rank .who small{ display:block;font-weight:600;font-size:.72rem;color:var(--muted);margin-top:2px;
+    overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .rank .amount{ font-weight:900;color:var(--gold);font-size:.95rem;white-space:nowrap }
   .rank.me{background:linear-gradient(135deg, rgba(177,74,237,.28), rgba(0,229,255,.16));
     border-color:var(--neon);box-shadow:0 0 26px rgba(177,74,237,.3);}
-  .rank.p1 .pos-num{ color:#ffd23f;font-size:1.3rem }
-  .rank.p2 .pos-num{ color:#d8dbe6;font-size:1.2rem }
-  .rank.p3 .pos-num{ color:#e0955a;font-size:1.2rem }
-  .rank .r-avatar{width:40px;height:40px;display:flex;align-items:center;justify-content:center;
-    border-radius:12px;font-size:1.4rem;background:var(--panel);border:1px solid var(--stroke);}
-  .admin-badge{display:inline-block;font-size:.65rem;font-weight:900;letter-spacing:.5px;
-    background:linear-gradient(135deg,#ffd23f,#ff9f1c);color:#0b0712;padding:2px 8px;
+  .rank.p1 .pos-num{ color:#ffd23f;font-size:1.2rem }
+  .rank.p2 .pos-num{ color:#d8dbe6;font-size:1.1rem }
+  .rank.p3 .pos-num{ color:#e0955a;font-size:1.1rem }
+  .rank .r-avatar{width:36px;height:36px;display:flex;align-items:center;justify-content:center;
+    border-radius:10px;font-size:1.2rem;background:var(--panel);border:1px solid var(--stroke);
+    background-size:cover;background-position:center;}
+  .admin-badge{display:inline-block;font-size:.6rem;font-weight:900;letter-spacing:.5px;
+    background:linear-gradient(135deg,#ffd23f,#ff9f1c);color:#0b0712;padding:2px 6px;
     border-radius:999px;margin-left:6px;vertical-align:middle;}
 
-  /* ---------- PERFIL ---------- */
-  .profile-card{border-radius:22px;overflow:hidden;background:var(--panel);
-    border:1px solid var(--stroke);margin-bottom:22px;}
-  .profile-banner{height:100px;background:var(--banner,linear-gradient(135deg,#b14aed,#00e5ff));
-    position:relative;}
-  .profile-info{padding:0 22px 22px;position:relative;}
-  .profile-avatar-big{width:88px;height:88px;display:flex;align-items:center;justify-content:center;
-    border-radius:24px;font-size:3rem;background:#140b22;border:4px solid #140b22;
-    position:relative;margin-top:-44px;box-shadow:0 8px 24px rgba(0,0,0,.5);}
-  .profile-name-big{font-size:1.5rem;font-weight:900;margin-top:10px;}
-  .profile-bio-big{color:var(--muted);font-size:.92rem;margin:4px 0 10px;}
-  .profile-stats{display:flex;gap:16px;flex-wrap:wrap;margin-top:12px;}
-  .profile-stat{background:rgba(0,0,0,.25);padding:8px 14px;border-radius:12px;font-weight:800;
-    font-size:.86rem;display:flex;align-items:center;gap:6px;}
+  /* ---------- PERFIL (Estilo Discord) ---------- */
+  .profile-card{background: #0f0817; border-radius:20px; overflow:hidden;
+    border:1px solid var(--stroke);margin-bottom:20px; box-shadow:0 10px 30px rgba(0,0,0,.4);}
+  .profile-banner{height:140px;background-size:cover;background-position:center;
+    background-repeat:no-repeat; position:relative;}
+  .edit-image-btn{position:absolute;bottom:10px;right:10px;background:rgba(0,0,0,.6);color:#fff;
+    padding:6px 12px;border-radius:8px;font-size:.75rem;font-weight:700;cursor:pointer;
+    backdrop-filter:blur(4px);border:1px solid rgba(255,255,255,0.2);transition:.2s;}
+  .edit-image-btn:hover{ background:rgba(0,0,0,.9); }
+  
+  .profile-info{padding:0 20px 20px;position:relative;}
+  .profile-avatar-big{width:96px;height:96px;border-radius:50%;background-size:cover;
+    background-position:center;position:relative;margin-top:-48px;border:5px solid #0f0817;
+    box-shadow:0 8px 24px rgba(0,0,0,0.5);display:flex;align-items:center;justify-content:center;
+    font-size:2.8rem;background-color:#140b22;}
+  .edit-avatar-btn{position:absolute;bottom:0;right:0;background:#00e5ff;color:#0a0612;
+    width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+    cursor:pointer;font-size:.9rem;border:2px solid #0f0817;transition:.2s;}
+  .edit-avatar-btn:hover{ transform:scale(1.1); }
 
-  .profile-form{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;
+  .profile-name-big{font-size:1.4rem;font-weight:900;margin-top:12px;}
+  .profile-bio-big{color:var(--muted);font-size:.9rem;margin:4px 0 12px;}
+  .profile-stats{display:flex;gap:12px;flex-wrap:wrap;}
+  .profile-stat{background:rgba(0,0,0,.25);padding:6px 12px;border-radius:10px;font-weight:800;
+    font-size:.8rem;display:flex;align-items:center;gap:6px;}
+
+  .profile-form{display:grid;grid-template-columns:1fr 1fr;gap:14px;
     padding:20px;background:var(--panel);border:1px solid var(--stroke);border-radius:20px;}
-  .profile-form label{display:flex;flex-direction:column;gap:6px;font-weight:700;font-size:.82rem;color:var(--muted);}
-  .profile-form input{font:inherit;font-weight:700;padding:11px 14px;border-radius:12px;
+  .profile-form label{display:flex;flex-direction:column;gap:6px;font-weight:700;font-size:.8rem;color:var(--muted);}
+  .profile-form input{font:inherit;font-weight:700;padding:12px 14px;border-radius:12px;
     background:rgba(0,0,0,.25);border:1px solid var(--stroke);color:var(--txt);outline:none;}
   .profile-form input:focus{ border-color:var(--neon2) }
-  .profile-form input[type=color]{height:44px;padding:4px;cursor:pointer;}
+  .profile-form input[type=color]{height:46px;padding:4px;cursor:pointer;}
   .profile-form .full{grid-column:1/-1;}
   .emoji-picker{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0;}
-  .emoji-picker button{cursor:pointer;font-size:1.35rem;padding:6px 9px;border-radius:10px;
+  .emoji-picker button{cursor:pointer;font-size:1.3rem;padding:6px 8px;border-radius:10px;
     background:rgba(0,0,0,.25);border:1px solid var(--stroke);transition:.15s;}
   .emoji-picker button:hover{ transform:scale(1.12);border-color:var(--neon);}
   .banner-presets{display:flex;flex-wrap:wrap;gap:8px;margin:6px 0;}
@@ -207,29 +222,30 @@
     transition:.15s;}
   .banner-presets button:hover{ transform:scale(1.1); }
   .banner-presets button.selected{ border-color:#fff;box-shadow:0 0 0 2px var(--neon); }
-  .collection-grid{display:grid;gap:12px;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));margin-top:14px;}
-  .collection-item{padding:12px;border-radius:14px;text-align:center;font-weight:800;font-size:.82rem;
+  
+  .collection-grid{display:grid;gap:12px;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));margin-top:14px;}
+  .collection-item{padding:12px;border-radius:14px;text-align:center;font-weight:800;font-size:.8rem;
     background:linear-gradient(160deg,var(--c1),var(--c2));color:#0b0712;}
-  .collection-item .c-emoji{font-size:2rem;display:block;margin-bottom:4px;}
+  .collection-item .c-emoji{font-size:1.8rem;display:block;margin-bottom:4px;}
 
   .danger-btn{background:rgba(255,80,110,.15);color:#ff8fa3;border:1px solid rgba(255,80,110,.4);
-    font:inherit;font-weight:800;font-size:.85rem;padding:11px 18px;border-radius:12px;cursor:pointer;
-    transition:.15s;margin-top:14px;}
+    font:inherit;font-weight:800;font-size:.85rem;padding:12px 18px;border-radius:12px;cursor:pointer;
+    transition:.15s;margin-top:14px;touch-action:manipulation;}
   .danger-btn:hover{ background:rgba(255,80,110,.3); }
 
   /* ---------- NOSE ---------- */
-  .nose-box{text-align:center;padding:50px 24px;border-radius:22px;
+  .nose-box{text-align:center;padding:40px 20px;border-radius:22px;
     background:var(--panel);border:1px dashed rgba(177,74,237,.5);}
-  .nose-emoji{ font-size:4.5rem;margin-bottom:14px;animation:float 3s ease-in-out infinite }
+  .nose-emoji{ font-size:4rem;margin-bottom:14px;animation:float 3s ease-in-out infinite }
   @keyframes float{ 50%{ transform:translateY(-12px) rotate(6deg) } }
-  .nose-answer{margin-top:22px;font-size:1.15rem;font-weight:800;min-height:34px;color:var(--neon2);}
+  .nose-answer{margin-top:22px;font-size:1.1rem;font-weight:800;min-height:34px;color:var(--neon2);}
 
   /* ---------- MODALES ---------- */
   .modal-backdrop{position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.78);
-    backdrop-filter:blur(8px);display:none;align-items:center;justify-content:center;padding:20px;}
+    backdrop-filter:blur(8px);display:none;align-items:center;justify-content:center;padding:16px;}
   .modal-backdrop.open{ display:flex; }
-  .modal{background:#140b22;border:1px solid var(--stroke);border-radius:20px;padding:28px;
-    max-width:420px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,.7);}
+  .modal{background:#140b22;border:1px solid var(--stroke);border-radius:20px;padding:24px;
+    max-width:420px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,.7);max-height:90vh;overflow-y:auto;}
   .modal h3{ margin-bottom:6px;font-size:1.2rem; }
   .modal p{ color:var(--muted);font-size:.86rem;margin-bottom:16px; }
   .modal select{width:100%;font:inherit;font-weight:700;padding:12px 14px;border-radius:12px;
@@ -237,51 +253,50 @@
   .modal-actions{ display:flex;gap:10px;margin-top:8px; }
   .modal-actions > *{ flex:1; }
   .ghost{cursor:pointer;font:inherit;font-weight:700;padding:11px 20px;border-radius:12px;
-    background:transparent;color:var(--muted);border:1px solid var(--stroke);transition:.2s;}
+    background:transparent;color:var(--muted);border:1px solid var(--stroke);transition:.2s;touch-action:manipulation;}
   .ghost:hover{ color:var(--txt);border-color:var(--neon) }
   .dir{cursor:pointer;font:inherit;font-weight:800;font-size:.95rem;padding:12px 20px;border-radius:12px;
     color:#0a0612;background:linear-gradient(135deg,#00e5ff,#7ef7c8);border:none;transition:.2s;
-    box-shadow:0 8px 22px rgba(0,229,255,.28);}
+    box-shadow:0 8px 22px rgba(0,229,255,.28);touch-action:manipulation;}
   .dir:hover:not(:disabled){ transform:translateY(-2px); box-shadow:0 12px 30px rgba(0,229,255,.45) }
   .dir:disabled{ opacity:.5;cursor:not-allowed;box-shadow:none }
 
   /* ---------- ADMIN PANEL ---------- */
   .admin-panel{background:#140b22;border:1px solid var(--stroke);border-radius:20px;
-    width:100%;max-width:960px;max-height:92vh;display:flex;flex-direction:column;overflow:hidden;
+    width:100%;max-width:960px;max-height:95vh;display:flex;flex-direction:column;overflow:hidden;
     box-shadow:0 20px 60px rgba(0,0,0,.7);}
-  .admin-header{padding:16px 22px;display:flex;align-items:center;justify-content:space-between;
+  .admin-header{padding:14px 20px;display:flex;align-items:center;justify-content:space-between;
     border-bottom:1px solid var(--stroke);gap:10px;}
-  .admin-header h2{font-size:1.25rem;margin:0;background:none;color:var(--txt);-webkit-text-fill-color:var(--txt);}
-  .admin-tabs{display:flex;gap:6px;padding:10px 22px 0;border-bottom:1px solid var(--stroke);overflow-x:auto;}
+  .admin-header h2{font-size:1.15rem;margin:0;background:none;color:var(--txt);-webkit-text-fill-color:var(--txt);}
+  
+  .admin-tabs-wrapper{overflow-x:auto;white-space:nowrap;scrollbar-width:none;border-bottom:1px solid var(--stroke);}
+  .admin-tabs-wrapper::-webkit-scrollbar{display:none;}
+  .admin-tabs{display:inline-flex;gap:6px;padding:8px 20px 0;}
   .admin-tab{background:transparent;border:none;color:var(--muted);font:inherit;font-weight:700;
-    padding:10px 14px;cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;}
+    padding:10px 14px;cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;touch-action:manipulation;}
   .admin-tab.active{ color:var(--txt);border-color:var(--neon); }
-  .admin-body{padding:18px 22px;overflow-y:auto;flex:1;}
+  
+  .admin-body{padding:16px;overflow-y:auto;flex:1;}
   .admin-section{ display:none; }
   .admin-section.active{ display:block; }
-  .admin-section h4{ font-size:.92rem;margin:0 0 12px;color:var(--muted);letter-spacing:.5px;text-transform:uppercase; }
-  .admin-section h4:not(:first-child){ margin-top:22px; }
+  .admin-section h4{ font-size:.85rem;margin:0 0 10px;color:var(--muted);letter-spacing:.5px;text-transform:uppercase; }
+  .admin-section h4:not(:first-child){ margin-top:20px; }
 
   .admin-row{display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:10px 12px;border-radius:12px;
     background:var(--panel);border:1px solid var(--stroke);margin-bottom:8px;}
   .admin-row input[type=text], .admin-row input[type=number]{
     font:inherit;font-weight:700;font-size:.85rem;padding:8px 10px;border-radius:9px;
-    background:rgba(0,0,0,.25);border:1px solid var(--stroke);color:var(--txt);outline:none;}
-  .admin-row input[type=number]{ width:92px; }
-  .admin-row input.ac-name{ width:150px; }
-  .admin-row input.ac-club{ width:120px; }
-  .admin-row input.ac-emoji{ width:52px;text-align:center; }
-  .admin-row input.ac-pos{ width:52px;text-align:center; }
-  .admin-row input.ac-desc{ width:180px; }
+    background:rgba(0,0,0,.25);border:1px solid var(--stroke);color:var(--txt);outline:none;flex:1;min-width:80px;}
   .admin-row input[type=color]{ width:34px;height:34px;padding:2px;border-radius:8px;border:1px solid var(--stroke);
-    background:transparent;cursor:pointer;}
-  .admin-row .a-avatar{font-size:1.4rem;min-width:32px;text-align:center;}
-  .admin-row .a-tag{font-size:.72rem;color:var(--muted);font-weight:700;padding:3px 7px;
-    border-radius:6px;background:rgba(255,255,255,.06);}
+    background:transparent;cursor:pointer;flex:none;}
+  .admin-row .a-avatar{font-size:1.3rem;min-width:28px;text-align:center;}
+  .admin-row .a-tag{font-size:.7rem;color:var(--muted);font-weight:700;padding:3px 7px;
+    border-radius:6px;background:rgba(255,255,255,.06);white-space:nowrap;}
   .admin-row .a-actions{display:flex;gap:6px;margin-left:auto;flex-wrap:wrap;}
-  .admin-btn{cursor:pointer;font:inherit;font-weight:700;font-size:.78rem;padding:7px 11px;
+  
+  .admin-btn{cursor:pointer;font:inherit;font-weight:700;font-size:.75rem;padding:7px 11px;
     border-radius:8px;border:1px solid var(--stroke);background:rgba(255,255,255,.05);color:var(--txt);
-    transition:.15s;white-space:nowrap;}
+    transition:.15s;white-space:nowrap;touch-action:manipulation;}
   .admin-btn:hover{ background:rgba(255,255,255,.12); }
   .admin-btn.primary{ background:linear-gradient(135deg,#00e5ff,#7ef7c8);color:#0a0612;border:none; }
   .admin-btn.primary:hover{ filter:brightness(1.1); }
@@ -294,27 +309,33 @@
   .admin-form{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px;padding:12px;border-radius:12px;
     background:rgba(0,229,255,.05);border:1px dashed rgba(0,229,255,.3);}
   .admin-form input{font:inherit;font-weight:700;font-size:.85rem;padding:8px 10px;border-radius:9px;
-    background:rgba(0,0,0,.25);border:1px solid var(--stroke);color:var(--txt);outline:none;}
+    background:rgba(0,0,0,.25);border:1px solid var(--stroke);color:var(--txt);outline:none;flex:1;min-width:100px;}
   .admin-form input::placeholder{ color:rgba(154,144,184,.7); }
+  
   .rules-help{background:rgba(0,229,255,.05);border:1px dashed rgba(0,229,255,.3);
-    border-radius:12px;padding:14px;margin-top:14px;font-size:.82rem;line-height:1.6;}
-  .rules-help pre{background:rgba(0,0,0,.4);padding:12px;border-radius:8px;overflow-x:auto;
-    font-size:.72rem;margin-top:10px;color:#7ef7c8;border:1px solid var(--stroke);}
+    border-radius:12px;padding:14px;margin-top:14px;font-size:.8rem;line-height:1.6;}
+  .rules-help pre{background:rgba(0,0,0,.4);padding:10px;border-radius:8px;overflow-x:auto;
+    font-size:.7rem;margin-top:10px;color:#7ef7c8;border:1px solid var(--stroke);}
 
-  .toast{position:fixed;bottom:26px;left:50%;transform:translate(-50%,120%);
-    background:#1a1030;border:1px solid var(--neon);padding:14px 22px;border-radius:14px;
-    font-weight:800;font-size:.92rem;box-shadow:0 12px 40px rgba(177,74,237,.45);
+  .toast{position:fixed;bottom:20px;left:50%;transform:translate(-50%,120%);
+    background:#1a1030;border:1px solid var(--neon);padding:12px 20px;border-radius:14px;
+    font-weight:800;font-size:.9rem;box-shadow:0 12px 40px rgba(177,74,237,.45);
     transition:transform .35s cubic-bezier(.3,1.4,.5,1);z-index:999;max-width:90vw;text-align:center;}
   .toast.show{ transform:translate(-50%,0) }
-  footer{text-align:center;padding:26px 18px 40px;color:var(--muted);font-size:.82rem;}
+  footer{text-align:center;padding:20px 16px 40px;color:var(--muted);font-size:.8rem;}
 
-  @media(max-width:520px){
+  /* --- RESPONSIVE (Móviles) --- */
+  @media(max-width:600px){
     .logo{font-size:1.2rem}
-    .coins-pill{font-size:.9rem;padding:8px 12px}
-    .profile-avatar-big{width:72px;height:72px;font-size:2.4rem;margin-top:-36px;}
-    .profile-banner{height:80px}
-    .admin-row input.ac-name{ width:110px; }
-    .admin-row input.ac-desc{ width:130px; }
+    .coins-pill{font-size:.85rem;padding:6px 10px}
+    .profile-form { grid-template-columns: 1fr; }
+    .profile-banner{ height: 100px; }
+    .profile-avatar-big{ width: 80px; height: 80px; font-size: 2.2rem; margin-top: -40px; }
+    .admin-row { flex-direction: column; align-items: stretch; }
+    .admin-row input[type=text], .admin-row input[type=number] { width: 100%; }
+    .admin-row .a-actions { margin-left: 0; justify-content: flex-end; margin-top: 6px; }
+    .admin-row .a-avatar, .admin-row .a-tag, .admin-row .admin-toggle { display: inline-block; margin-bottom: 4px; }
+    .admin-form input { min-width: 100%; }
   }
 </style>
 </head>
@@ -369,46 +390,47 @@
   </div>
 </header>
 
-<nav class="tabs">
-  <button class="tab active" data-tab="inicio">🏠 Inicio</button>
-  <button class="tab" data-tab="tienda">🛒 Tienda</button>
-  <button class="tab" data-tab="cartas">🃏 Luicards</button>
-  <button class="tab" data-tab="top">🏆 Top Global</button>
-  <button class="tab" data-tab="perfil">👤 Mi Perfil</button>
-  <button class="tab" data-tab="nose">🤷 Nose</button>
-</nav>
+<div class="tabs-wrapper">
+  <nav class="tabs">
+    <button class="tab active" data-tab="inicio">🏠 Inicio</button>
+    <button class="tab" data-tab="tienda">🛒 Tienda</button>
+    <button class="tab" data-tab="cartas">🃏 Luicards</button>
+    <button class="tab" data-tab="top">🏆 Top Global</button>
+    <button class="tab" data-tab="perfil">👤 Mi Perfil</button>
+    <button class="tab" data-tab="nose">🤷 Nose</button>
+  </nav>
+</div>
 
 <main>
-
   <!-- INICIO -->
   <section id="inicio" class="panel active">
     <h2>Bienvenido a LUIPAGE 5D</h2>
     <p class="sub">Tu centro de coleccionismo de fulbo. Comprá Luicards, items, intercambiá con otros jugadores y escalá en el Top Global.</p>
-    <div style="display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(200px,1fr))">
-      <div class="rank" style="flex-direction:column;align-items:flex-start;padding:20px">
-        <span style="font-size:2rem">🃏</span>
-        <b style="font-size:1.05rem;margin-top:8px">Luicards</b>
-        <small style="color:var(--muted);font-size:.82rem;margin-top:4px">Cartas de jugadores reales de fulbo.</small>
+    <div style="display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(160px,1fr))">
+      <div class="rank" style="flex-direction:column;align-items:flex-start;padding:16px">
+        <span style="font-size:1.8rem">🃏</span>
+        <b style="font-size:1rem;margin-top:8px">Luicards</b>
+        <small style="color:var(--muted);font-size:.8rem;margin-top:4px">Cartas de jugadores reales de fulbo.</small>
       </div>
-      <div class="rank" style="flex-direction:column;align-items:flex-start;padding:20px">
-        <span style="font-size:2rem">🛒</span>
-        <b style="font-size:1.05rem;margin-top:8px">Tienda general</b>
-        <small style="color:var(--muted);font-size:.82rem;margin-top:4px">Items, boosters y cosas raras de la 5D.</small>
+      <div class="rank" style="flex-direction:column;align-items:flex-start;padding:16px">
+        <span style="font-size:1.8rem">🛒</span>
+        <b style="font-size:1rem;margin-top:8px">Tienda general</b>
+        <small style="color:var(--muted);font-size:.8rem;margin-top:4px">Items, boosters y cosas raras de la 5D.</small>
       </div>
-      <div class="rank" style="flex-direction:column;align-items:flex-start;padding:20px">
-        <span style="font-size:2rem">🔄</span>
-        <b style="font-size:1.05rem;margin-top:8px">Trades</b>
-        <small style="color:var(--muted);font-size:.82rem;margin-top:4px">Intercambiá cartas con otros jugadores.</small>
+      <div class="rank" style="flex-direction:column;align-items:flex-start;padding:16px">
+        <span style="font-size:1.8rem">🔄</span>
+        <b style="font-size:1rem;margin-top:8px">Trades</b>
+        <small style="color:var(--muted);font-size:.8rem;margin-top:4px">Intercambiá cartas con otros jugadores.</small>
       </div>
-      <div class="rank" style="flex-direction:column;align-items:flex-start;padding:20px">
-        <span style="font-size:2rem">🏆</span>
-        <b style="font-size:1.05rem;margin-top:8px">Top Global</b>
-        <small style="color:var(--muted);font-size:.82rem;margin-top:4px">Ranking en tiempo real de todos los jugadores.</small>
+      <div class="rank" style="flex-direction:column;align-items:flex-start;padding:16px">
+        <span style="font-size:1.8rem">🏆</span>
+        <b style="font-size:1rem;margin-top:8px">Top Global</b>
+        <small style="color:var(--muted);font-size:.8rem;margin-top:4px">Ranking en tiempo real de todos los jugadores.</small>
       </div>
     </div>
-    <div style="margin-top:28px;padding:22px;border-radius:18px;background:var(--panel);border:1px solid var(--stroke)">
-      <h3 style="font-size:1.05rem;margin-bottom:8px">📢 ¿Cómo ganar LuiCoins?</h3>
-      <p style="color:var(--muted);font-size:.88rem;line-height:1.6">
+    <div style="margin-top:24px;padding:20px;border-radius:18px;background:var(--panel);border:1px solid var(--stroke)">
+      <h3 style="font-size:1rem;margin-bottom:8px">📢 ¿Cómo ganar LuiCoins?</h3>
+      <p style="color:var(--muted);font-size:.86rem;line-height:1.6">
         Los LuiCoins te los otorga el admin de la 5D. Si sos nuevo, pedile al admin que te cargue saldo para empezar a comprar.
         Mientras tanto, podés tradear cartas con otros jugadores para hacer crecer tu colección.
       </p>
@@ -442,9 +464,13 @@
     <p class="sub">Personalizá cómo te ven los demás jugadores.</p>
 
     <div class="profile-card" id="profileCard">
-      <div class="profile-banner" id="profileBanner"></div>
+      <div class="profile-banner" id="profileBanner">
+        <label class="edit-image-btn" for="bannerUpload">📷 Cambiar Banner</label>
+      </div>
       <div class="profile-info">
-        <div class="profile-avatar-big" id="profileAvatarBig">🐐</div>
+        <div class="profile-avatar-big" id="profileAvatarBig">
+          <label class="edit-avatar-btn" for="avatarUpload">📷</label>
+        </div>
         <div class="profile-name-big" id="profileNameBig">LuiFan <span class="admin-badge" id="profileAdminBadge" style="display:none">ADMIN</span></div>
         <div class="profile-bio-big" id="profileBioBig">El crack de la 5D</div>
         <div class="profile-stats">
@@ -457,28 +483,33 @@
 
     <h3 style="margin:22px 0 12px;font-size:1rem;color:var(--muted)">EDITAR PERFIL</h3>
     <div class="profile-form">
+      <input type="file" id="avatarUpload" accept="image/*" style="display:none">
+      <input type="file" id="bannerUpload" accept="image/*" style="display:none">
+
       <label>Nombre
         <input id="editName" maxlength="18">
       </label>
       <label>Bio corta
         <input id="editBio" maxlength="60" placeholder="Una frase...">
       </label>
-      <label>Avatar (emoji)
-        <input id="editAvatar" maxlength="4" placeholder="😎">
-      </label>
-      <label>Color de acento
-        <input type="color" id="editColor">
-      </label>
+      
+      <div class="full" style="margin-top:10px;">
+        <label style="margin-bottom:6px">Color de acento</label>
+        <input type="color" id="editColor" style="width:100%;max-width:100px;">
+      </div>
+
       <div class="full">
-        <label style="margin-bottom:6px">Emoji picker</label>
+        <label style="margin-bottom:6px">Si no querés foto, elegí un avatar (Emoji)</label>
         <div class="emoji-picker" id="emojiPicker"></div>
       </div>
+
       <div class="full">
-        <label style="margin-bottom:6px">Banner (gradiente)</label>
+        <label style="margin-bottom:6px">Si no querés foto, elegí un banner (Gradiente)</label>
         <div class="banner-presets" id="bannerPresets"></div>
       </div>
-      <div class="full">
-        <button class="dir" id="saveProfile" style="max-width:220px">💾 Guardar perfil</button>
+      
+      <div class="full" style="margin-top: 15px;">
+        <button class="dir" id="saveProfile" style="width:100%;">💾 Guardar todos los cambios</button>
       </div>
     </div>
 
@@ -502,7 +533,6 @@
       <div class="nose-answer" id="noseAnswer"></div>
     </div>
   </section>
-
 </main>
 
 <footer>LUIPAGE 5D · hecho con 🧡 para Lui · los LuiCoins no valen nada, igual que el peso</footer>
@@ -538,19 +568,21 @@
       <h2>🛠️ Panel de Admin</h2>
       <button class="admin-btn" id="adminClose">✕ Cerrar</button>
     </div>
-    <div class="admin-tabs">
-      <button class="admin-tab active" data-atab="players">👥 Jugadores</button>
-      <button class="admin-tab" data-atab="shopcards">🃏 Luicards</button>
-      <button class="admin-tab" data-atab="shopitems">🛒 Tienda</button>
-      <button class="admin-tab" data-atab="settings">⚙️ Ajustes</button>
+    <div class="admin-tabs-wrapper">
+      <div class="admin-tabs">
+        <button class="admin-tab active" data-atab="players">👥 Jugadores</button>
+        <button class="admin-tab" data-atab="shopcards">🃏 Luicards</button>
+        <button class="admin-tab" data-atab="shopitems">🛒 Tienda</button>
+        <button class="admin-tab" data-atab="settings">⚙️ Ajustes</button>
+      </div>
     </div>
     <div class="admin-body">
       <div id="adminPlayers" class="admin-section active">
         <h4>Agregar jugador</h4>
         <div class="admin-form">
-          <input id="newPlayerName" placeholder="Nombre" style="flex:1;min-width:140px">
-          <input id="newPlayerCoins" type="number" placeholder="LuiCoins" value="100" style="width:110px">
-          <input id="newPlayerAvatar" placeholder="😎" maxlength="4" style="width:64px;text-align:center">
+          <input id="newPlayerName" placeholder="Nombre">
+          <input id="newPlayerCoins" type="number" placeholder="LuiCoins" value="100">
+          <input id="newPlayerAvatar" placeholder="😎" maxlength="4">
           <button class="admin-btn primary" id="addPlayerBtn">➕ Agregar</button>
         </div>
         <h4>Jugadores registrados</h4>
@@ -559,14 +591,14 @@
       <div id="adminShopcards" class="admin-section">
         <h4>Agregar Luicard</h4>
         <div class="admin-form">
-          <input id="newCardEmoji" placeholder="🐐" maxlength="4" style="width:60px;text-align:center">
-          <input id="newCardName" placeholder="Nombre" style="flex:1;min-width:130px">
-          <input id="newCardClub" placeholder="Club" style="width:120px">
-          <input id="newCardPos" placeholder="DEL" maxlength="3" style="width:58px;text-align:center">
-          <input id="newCardRating" type="number" placeholder="99" min="1" max="99" style="width:70px">
-          <input id="newCardPrice" type="number" placeholder="500" min="1" style="width:90px">
-          <input type="color" id="newCardC1" value="#8ee7ff" style="width:38px;height:36px;padding:2px;border-radius:8px;border:1px solid var(--stroke);background:transparent;cursor:pointer">
-          <input type="color" id="newCardC2" value="#ffb3d9" style="width:38px;height:36px;padding:2px;border-radius:8px;border:1px solid var(--stroke);background:transparent;cursor:pointer">
+          <input id="newCardEmoji" placeholder="🐐" maxlength="4">
+          <input id="newCardName" placeholder="Nombre">
+          <input id="newCardClub" placeholder="Club">
+          <input id="newCardPos" placeholder="DEL" maxlength="3">
+          <input id="newCardRating" type="number" placeholder="99" min="1" max="99">
+          <input id="newCardPrice" type="number" placeholder="500" min="1">
+          <input type="color" id="newCardC1" value="#8ee7ff">
+          <input type="color" id="newCardC2" value="#ffb3d9">
           <button class="admin-btn primary" id="addCardBtn">➕ Agregar</button>
         </div>
         <h4>Luicards en tienda</h4>
@@ -575,13 +607,13 @@
       <div id="adminShopitems" class="admin-section">
         <h4>Agregar item a la tienda general</h4>
         <div class="admin-form">
-          <input id="newItemEmoji" placeholder="🎁" maxlength="4" style="width:60px;text-align:center">
-          <input id="newItemName" placeholder="Nombre" style="flex:1;min-width:130px">
-          <input id="newItemDesc" placeholder="Descripción" style="flex:2;min-width:180px">
-          <input id="newItemCat" placeholder="Categoría" style="width:110px">
-          <input id="newItemPrice" type="number" placeholder="100" min="1" style="width:90px">
-          <input type="color" id="newItemC1" value="#ffe98a" style="width:38px;height:36px;padding:2px;border-radius:8px;border:1px solid var(--stroke);background:transparent;cursor:pointer">
-          <input type="color" id="newItemC2" value="#ffb3b3" style="width:38px;height:36px;padding:2px;border-radius:8px;border:1px solid var(--stroke);background:transparent;cursor:pointer">
+          <input id="newItemEmoji" placeholder="🎁" maxlength="4">
+          <input id="newItemName" placeholder="Nombre">
+          <input id="newItemDesc" placeholder="Descripción">
+          <input id="newItemCat" placeholder="Categoría">
+          <input id="newItemPrice" type="number" placeholder="100" min="1">
+          <input type="color" id="newItemC1" value="#ffe98a">
+          <input type="color" id="newItemC2" value="#ffb3b3">
           <button class="admin-btn primary" id="addItemBtn">➕ Agregar</button>
         </div>
         <h4>Items en tienda general</h4>
@@ -597,7 +629,6 @@
           <b>Firebase Console → Firestore → users → (tu documento)</b> y agregá manualmente
           el campo <code>isAdmin</code> (tipo boolean) con valor <code>true</code>. Después recargá la página.
         </div>
-
         <h4>Reglas de Firestore (modo dev)</h4>
         <div class="rules-help">
           <b>⚠️ Las reglas actuales de tu Firestore deben permitir leer/escribir a usuarios autenticados.</b>
@@ -622,8 +653,6 @@ service cloud.firestore {
     }
   }
 }</pre>
-          Estas reglas son <b>permisivas para desarrollo</b>. Para producción real necesitás
-          validar <code>isAdmin</code> del lado servidor o usar Cloud Functions.
         </div>
       </div>
     </div>
@@ -887,7 +916,14 @@ function renderAll(){
   renderCollection();
   renderInventory();
   if(userData){
-    $('userMenuTrigger').textContent = userData.avatar || '😎';
+    const trigger = $('userMenuTrigger');
+    if(userData.avatar && userData.avatar.startsWith('data:image')){
+      trigger.textContent = '';
+      trigger.style.backgroundImage = `url(${userData.avatar})`;
+    } else {
+      trigger.style.backgroundImage = 'none';
+      trigger.textContent = userData.avatar || '😎';
+    }
   }
 }
 
@@ -1061,21 +1097,24 @@ function renderTop(){
   }
   const sorted = [...allUsers].sort((a,b) => (b.coins||0) - (a.coins||0));
   const medals = ['🥇','🥈','🥉'];
-  list.innerHTML = sorted.map((u,i) => `
+  list.innerHTML = sorted.map((u,i) => {
+    const isImg = u.avatar && u.avatar.startsWith('data:image');
+    const avStyle = isImg ? `background-image:url(${u.avatar});` : '';
+    return `
     <div class="rank ${u.id === authUser?.uid ? 'me' : ''} ${i<3 ? 'p'+(i+1) : ''}">
       <div class="pos-num">${i<3 ? medals[i] : '#'+(i+1)}</div>
-      <div class="r-avatar">${u.avatar || '😎'}</div>
+      <div class="r-avatar" style="${avStyle}">${isImg ? '' : (u.avatar || '😎')}</div>
       <div class="who">
         ${u.id === authUser?.uid ? '⭐ ' : ''}${escapeHtml(u.name || 'Jugador')}${u.isAdmin ? '<span class="admin-badge">ADMIN</span>' : ''}
         <small>${escapeHtml(u.bio || 'Jugador de la 5D')}</small>
       </div>
       <div class="amount">🪙 ${u.coins || 0}</div>
     </div>
-  `).join('');
+  `}).join('');
 }
 
 /* =========================================================
-   PERFIL
+   PERFIL Y PERSONALIZACIÓN AVANZADA
 ========================================================= */
 const EMOJIS = ['🐐','👑','🐢','🤖','💫','🎩','🌟','🧠','🧤','🎯','🪄','🎻','⚽','🔥','💎','🦁','🐉','👽','🥷','🧙','😎','🤡','🐔','🦄','🐺','🐻','🦊','🐯','🦅','🍀','💜','⚡'];
 const BANNERS = [
@@ -1091,12 +1130,64 @@ const BANNERS = [
   'linear-gradient(135deg,#00c9ff,#92fe9d)'
 ];
 
+let currentAvatar = '';
+let currentBanner = '';
+
+// Achicar imagen a Base64 para ahorrar espacio
+function procesarImagen(file, maxWidth, maxHeight) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = (e) => {
+      const img = new Image();
+      img.src = e.target.result;
+      img.onload = () => {
+        let width = img.width;
+        let height = img.height;
+        if (width > height) {
+          if (width > maxWidth) { height *= maxWidth / width; width = maxWidth; }
+        } else {
+          if (height > maxHeight) { width *= maxHeight / height; height = maxHeight; }
+        }
+        const canvas = document.createElement('canvas');
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, width, height);
+        resolve(canvas.toDataURL('image/jpeg', 0.75)); 
+      };
+      img.onerror = error => reject(error);
+    };
+    reader.onerror = error => reject(error);
+  });
+}
+
+$('avatarUpload').addEventListener('change', async (e) => {
+  const file = e.target.files[0];
+  if(!file) return;
+  toast('Procesando foto...');
+  const base64 = await procesarImagen(file, 200, 200);
+  currentAvatar = base64;
+  renderProfilePreview();
+  $('editAvatar').value = ''; 
+});
+
+$('bannerUpload').addEventListener('change', async (e) => {
+  const file = e.target.files[0];
+  if(!file) return;
+  toast('Procesando banner...');
+  const base64 = await procesarImagen(file, 800, 300);
+  currentBanner = base64;
+  renderProfilePreview();
+});
+
 (function buildEmojiPicker(){
   const picker = $('emojiPicker');
   picker.innerHTML = EMOJIS.map(e => `<button type="button" data-emoji="${e}">${e}</button>`).join('');
   picker.querySelectorAll('button').forEach(b => b.addEventListener('click', () => {
     $('editAvatar').value = b.dataset.emoji;
-    updateProfilePreview();
+    currentAvatar = b.dataset.emoji;
+    renderProfilePreview();
   }));
 })();
 
@@ -1108,64 +1199,86 @@ const BANNERS = [
   presets.querySelectorAll('button').forEach(b => b.addEventListener('click', () => {
     presets.querySelectorAll('button').forEach(x => x.classList.remove('selected'));
     b.classList.add('selected');
-    $('profileCard').style.setProperty('--banner', b.dataset.banner);
-    $('profileBanner').style.background = b.dataset.banner;
     currentBanner = b.dataset.banner;
+    renderProfilePreview();
   }));
 })();
 
-let currentBanner = 'linear-gradient(135deg,#b14aed,#00e5ff)';
-
 function renderProfile(){
   if(!userData) return;
-  $('profileAvatarBig').textContent = userData.avatar || '😎';
-  $('profileNameBig').innerHTML = escapeHtml(userData.name || 'Jugador') +
-    (userData.isAdmin ? ' <span class="admin-badge">ADMIN</span>' : '');
-  $('profileBioBig').textContent = userData.bio || 'Sin bio todavía...';
+  
+  currentAvatar = userData.avatar || '😎';
+  currentBanner = userData.banner || 'linear-gradient(135deg,#b14aed,#00e5ff)';
+  
+  renderProfilePreview();
+
   $('profileCoinsBig').textContent = userData.coins || 0;
   $('profileCardsCount').textContent = (userData.owned || []).length;
   $('profileItemsCount').textContent = (userData.inventory || []).length;
-  $('profileCard').style.setProperty('--banner', userData.banner || 'linear-gradient(135deg,#b14aed,#00e5ff)');
-  $('profileBanner').style.background = userData.banner || 'linear-gradient(135deg,#b14aed,#00e5ff)';
-  currentBanner = userData.banner || 'linear-gradient(135deg,#b14aed,#00e5ff)';
 
   if(document.activeElement !== $('editName')) $('editName').value = userData.name || '';
   if(document.activeElement !== $('editBio')) $('editBio').value = userData.bio || '';
   if(document.activeElement !== $('editColor')) $('editColor').value = userData.color || '#b14aed';
-  if(document.activeElement !== $('editAvatar')) $('editAvatar').value = userData.avatar || '😎';
 
   document.querySelectorAll('#bannerPresets button').forEach(b => {
     b.classList.toggle('selected', b.dataset.banner === currentBanner);
   });
 }
 
-function updateProfilePreview(){
+function renderProfilePreview(){
   const name = $('editName').value.trim() || 'Jugador';
   const bio = $('editBio').value.trim() || 'Sin bio todavía...';
-  const av = $('editAvatar').value.trim() || '😎';
-  $('profileAvatarBig').textContent = av;
+  
+  const avContainer = $('profileAvatarBig');
+  const labelHTML = '<label class="edit-avatar-btn" for="avatarUpload">📷</label>';
+  
+  if (currentAvatar.startsWith('data:image') || currentAvatar.startsWith('http')) {
+    avContainer.style.backgroundImage = `url(${currentAvatar})`;
+    avContainer.innerHTML = labelHTML;
+  } else {
+    avContainer.style.backgroundImage = 'none';
+    avContainer.innerHTML = (currentAvatar || '😎') + labelHTML;
+  }
+
+  const bannerContainer = $('profileBanner');
+  const bannerLabel = '<label class="edit-image-btn" for="bannerUpload">📷 Cambiar Banner</label>';
+  
+  if (currentBanner.startsWith('data:image') || currentBanner.startsWith('http')) {
+    bannerContainer.style.backgroundImage = `url(${currentBanner})`;
+    bannerContainer.style.background = ''; 
+    bannerContainer.innerHTML = bannerLabel;
+  } else {
+    bannerContainer.style.backgroundImage = 'none';
+    bannerContainer.style.background = currentBanner;
+    bannerContainer.innerHTML = bannerLabel;
+  }
+
   $('profileNameBig').innerHTML = escapeHtml(name) + (userData?.isAdmin ? ' <span class="admin-badge">ADMIN</span>' : '');
   $('profileBioBig').textContent = bio;
-  $('profileBanner').style.background = currentBanner;
 }
-['editName','editBio','editAvatar'].forEach(id => $(id).addEventListener('input', updateProfilePreview));
+
+['editName','editBio','editAvatar'].forEach(id => $(id).addEventListener('input', () => {
+  if(id === 'editAvatar') currentAvatar = $(id).value;
+  renderProfilePreview();
+}));
 
 $('saveProfile').addEventListener('click', async () => {
   if(!userData) return;
   const name = $('editName').value.trim().slice(0,18);
   if(!name){ toast('Poné un nombre, che 🙃'); return; }
+  
   try{
     await updateDoc(doc(db, 'users', authUser.uid), {
-      name,
+      name: name,
       bio: $('editBio').value.trim().slice(0,60),
       color: $('editColor').value,
-      avatar: $('editAvatar').value.trim().slice(0,4) || '😎',
+      avatar: currentAvatar,
       banner: currentBanner
     });
-    toast('Perfil guardado ✅');
+    toast('¡Perfil actualizado! 🚀');
   }catch(e){
     console.error(e);
-    toast('No se pudo guardar el perfil');
+    toast('Error al guardar. Revisá que las imágenes no sean gigantes.');
   }
 });
 
@@ -1369,10 +1482,10 @@ function renderAdminPlayers(){
     const row = document.createElement('div');
     row.className = 'admin-row';
     row.innerHTML = `
-      <span class="a-avatar">${u.avatar || '😎'}</span>
-      <input type="text" class="admin-name" maxlength="18" value="${escapeHtml(u.name || '')}" style="width:130px">
-      <input type="number" class="admin-coins" value="${u.coins || 0}" style="width:90px">
-      <input type="text" class="admin-avatar" maxlength="4" value="${escapeHtml(u.avatar||'😎')}" style="width:48px;text-align:center">
+      <span class="a-avatar">${u.avatar && !u.avatar.startsWith('data:') ? u.avatar : '🖼️'}</span>
+      <input type="text" class="admin-name" maxlength="18" value="${escapeHtml(u.name || '')}">
+      <input type="number" class="admin-coins" value="${u.coins || 0}">
+      <input type="text" class="admin-avatar" maxlength="4" value="${u.avatar && !u.avatar.startsWith('data:') ? escapeHtml(u.avatar) : ''}" placeholder="Emoji">
       <span class="a-tag">${(u.owned||[]).length} 🃏</span>
       <span class="a-tag">${(u.inventory||[]).length} 🛒</span>
       <button class="admin-btn admin-toggle ${u.isAdmin ? 'is-admin' : ''}" title="Toggle admin">⚡ ${u.isAdmin ? 'ADMIN' : 'hacer admin'}</button>
@@ -1385,9 +1498,13 @@ function renderAdminPlayers(){
     row.querySelector('.btn-save').addEventListener('click', async () => {
       const name = row.querySelector('.admin-name').value.trim().slice(0,18) || 'Jugador';
       const coins = Math.max(0, parseInt(row.querySelector('.admin-coins').value) || 0);
-      const av = row.querySelector('.admin-avatar').value.trim().slice(0,4) || '😎';
+      const av = row.querySelector('.admin-avatar').value.trim().slice(0,4);
+      
+      const updates = { name, coins };
+      if (av) updates.avatar = av; // Solo sobrescribe si escribió un emoji
+      
       try{
-        await updateDoc(doc(db, 'users', u.id), { name, coins, avatar: av });
+        await updateDoc(doc(db, 'users', u.id), updates);
         toast('Jugador actualizado ✅');
       }catch(e){ toast('Error al guardar'); }
     });
@@ -1445,12 +1562,12 @@ function renderAdminCards(){
     const row = document.createElement('div');
     row.className = 'admin-row';
     row.innerHTML = `
-      <input type="text" class="ac-emoji" maxlength="4" value="${card.emoji || '⚽'}">
+      <input type="text" class="ac-emoji" maxlength="4" value="${card.emoji || '⚽'}" style="max-width:50px; text-align:center;">
       <input type="text" class="ac-name" value="${escapeHtml(card.name)}">
       <input type="text" class="ac-club" value="${escapeHtml(card.club || '')}">
-      <input type="text" class="ac-pos" maxlength="3" value="${escapeHtml(card.pos || 'DEL')}">
-      <input type="number" class="ac-rating" min="1" max="99" value="${card.rating || 80}" style="width:70px">
-      <input type="number" class="ac-price" min="1" value="${card.price || 100}" style="width:90px">
+      <input type="text" class="ac-pos" maxlength="3" value="${escapeHtml(card.pos || 'DEL')}" style="max-width:50px; text-align:center;">
+      <input type="number" class="ac-rating" min="1" max="99" value="${card.rating || 80}" style="max-width:60px;">
+      <input type="number" class="ac-price" min="1" value="${card.price || 100}" style="max-width:80px;">
       <input type="color" class="ac-c1" value="${card.c1 || '#8ee7ff'}">
       <input type="color" class="ac-c2" value="${card.c2 || '#ffb3d9'}">
       <button class="admin-btn ac-toggle ${card.available ? 'on' : ''}">${card.available ? '🟢' : '🔴'}</button>
@@ -1523,11 +1640,11 @@ function renderAdminItems(){
     const row = document.createElement('div');
     row.className = 'admin-row';
     row.innerHTML = `
-      <input type="text" class="it-emoji" maxlength="4" value="${item.emoji || '🎁'}" style="width:52px;text-align:center">
-      <input type="text" class="it-name" value="${escapeHtml(item.name)}" style="width:120px">
-      <input type="text" class="it-desc" value="${escapeHtml(item.description || '')}" style="width:150px">
-      <input type="text" class="it-cat" value="${escapeHtml(item.category || '')}" style="width:100px">
-      <input type="number" class="it-price" min="1" value="${item.price || 100}" style="width:80px">
+      <input type="text" class="it-emoji" maxlength="4" value="${item.emoji || '🎁'}" style="max-width:50px; text-align:center;">
+      <input type="text" class="it-name" value="${escapeHtml(item.name)}">
+      <input type="text" class="it-desc" value="${escapeHtml(item.description || '')}">
+      <input type="text" class="it-cat" value="${escapeHtml(item.category || '')}">
+      <input type="number" class="it-price" min="1" value="${item.price || 100}" style="max-width:80px;">
       <input type="color" class="it-c1" value="${item.c1 || '#ffe98a'}">
       <input type="color" class="it-c2" value="${item.c2 || '#ffb3b3'}">
       <button class="admin-btn it-toggle ${item.available ? 'on' : ''}">${item.available ? '🟢' : '🔴'}</button>
