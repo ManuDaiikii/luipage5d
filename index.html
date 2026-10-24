@@ -1,682 +1,513 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>LUIPAGE 5D</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>LuiPage5D</title>
 <style>
-  :root{
-    --bg:#0a0612;--panel:rgba(255,255,255,.055);--stroke:rgba(255,255,255,.10);
-    --neon:#b14aed;--neon2:#00e5ff;--gold:#ffd23f;--txt:#eae6f5;--muted:#9a90b8;
-  }
-  *{box-sizing:border-box;margin:0;padding:0;}
-  body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--bg);
-    color:var(--txt);min-height:100vh;overflow-x:hidden;}
-  body::before{content:'';position:fixed;inset:0;z-index:-1;
-    background:radial-gradient(circle at 12% 8%, rgba(177,74,237,.38), transparent 42%),
-      radial-gradient(circle at 88% 12%, rgba(0,229,255,.28), transparent 42%),
-      radial-gradient(circle at 50% 105%, rgba(255,210,63,.16), transparent 55%);
-    animation:hue 20s infinite alternate ease-in-out;}
-  @keyframes hue{ to{ filter:hue-rotate(55deg); } }
-
-  /* ---------- LOGIN ---------- */
-  .login-overlay{position:fixed;inset:0;z-index:500;display:flex;align-items:center;justify-content:center;
-    padding:20px;background:rgba(10,6,18,.92);backdrop-filter:blur(14px);overflow-y:auto;}
-  .login-overlay.hidden{ display:none; }
-  .login-card{width:100%;max-width:420px;background:#140b22;border:1px solid var(--stroke);
-    border-radius:24px;padding:36px 28px;box-shadow:0 24px 80px rgba(0,0,0,.8);text-align:center;margin:auto;}
-  .login-logo{font-size:2rem;font-weight:900;letter-spacing:2px;
-    background:linear-gradient(90deg,#b14aed,#00e5ff,#ffd23f,#b14aed);background-size:300% 100%;
-    -webkit-background-clip:text;background-clip:text;color:transparent;
-    animation:slide 6s linear infinite;margin-bottom:8px;}
-  @keyframes slide{ to{ background-position:300% 0; } }
-  .login-sub{color:var(--muted);font-size:.88rem;margin-bottom:26px;}
-  .login-btn{width:100%;cursor:pointer;font:inherit;font-weight:800;font-size:.95rem;
-    padding:14px 18px;border-radius:14px;border:none;transition:.2s;touch-action:manipulation;
-    display:flex;align-items:center;justify-content:center;gap:10px;}
-  .login-btn.google{background:#fff;color:#111;}
-  .login-btn.google:hover{ transform:translateY(-2px);box-shadow:0 8px 24px rgba(255,255,255,.2); }
-  .login-btn.primary{background:linear-gradient(135deg,#b14aed,#00e5ff);color:#0a0612;}
-  .login-btn.primary:hover{ transform:translateY(-2px);box-shadow:0 8px 24px rgba(177,74,237,.4); }
-  .login-btn.secondary{background:transparent;color:var(--muted);border:1px solid var(--stroke);}
-  .login-btn.secondary:hover{color:var(--txt);border-color:var(--neon);}
-  .login-divider{display:flex;align-items:center;gap:12px;margin:20px 0;color:var(--muted);
-    font-size:.78rem;font-weight:700;letter-spacing:1px;}
-  .login-divider::before,.login-divider::after{content:'';flex:1;height:1px;background:var(--stroke);}
-  .login-form{display:flex;flex-direction:column;gap:10px;}
-  .login-form input{font:inherit;font-weight:700;padding:14px 16px;border-radius:14px;
-    background:rgba(0,0,0,.3);border:1px solid var(--stroke);color:var(--txt);outline:none;}
-  .login-form input:focus{ border-color:var(--neon2); }
-  .login-note{color:var(--muted);font-size:.72rem;margin-top:16px;line-height:1.5;}
-  .login-error{color:#ff8fa3;font-size:.82rem;font-weight:700;margin-top:10px;min-height:20px;}
-
-  /* ---------- HEADER ---------- */
-  header{position:sticky;top:0;z-index:50;backdrop-filter:blur(16px);
-    background:rgba(10,6,18,.72);border-bottom:1px solid var(--stroke);}
-  .header-inner{max-width:1100px;margin:0 auto;padding:12px 16px;display:flex;
-    align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;}
-  .logo{font-size:1.45rem;font-weight:900;letter-spacing:1.5px;
-    background:linear-gradient(90deg,#b14aed,#00e5ff,#ffd23f,#b14aed);background-size:300% 100%;
-    -webkit-background-clip:text;background-clip:text;color:transparent;
-    animation:slide 6s linear infinite;cursor:default;user-select:none;}
-  .logo .five{ font-size:.8em; opacity:.9 }
-  .header-actions{display:flex;align-items:center;gap:10px;}
-  .coins-pill{display:flex;align-items:center;gap:9px;padding:8px 14px;border-radius:999px;
-    background:linear-gradient(135deg, rgba(255,210,63,.16), rgba(255,210,63,.05));
-    border:1px solid rgba(255,210,63,.4);font-weight:800;font-size:1rem;
-    box-shadow:0 0 22px rgba(255,210,63,.18);}
-  .coins-pill small{ font-weight:600;color:var(--muted);font-size:.72rem;letter-spacing:.5px }
-  .coins-pill.pop{ animation:pop .35s ease }
-  @keyframes pop{ 50%{ transform:scale(1.12); } }
-
-  .user-menu{position:relative;}
-  .user-menu-trigger{cursor:pointer;width:42px;height:42px;border-radius:12px;display:flex;
-    align-items:center;justify-content:center;font-size:1.4rem;background:var(--panel);
-    border:1px solid var(--stroke);transition:.2s;background-size:cover;background-position:center;}
-  .user-menu-trigger:hover{ border-color:var(--neon);transform:scale(1.05); }
-  .user-menu-dropdown{position:absolute;top:calc(100% + 8px);right:0;min-width:200px;background:#140b22;
-    border:1px solid var(--stroke);border-radius:14px;padding:6px;display:none;
-    box-shadow:0 12px 40px rgba(0,0,0,.6);z-index:100;}
-  .user-menu-dropdown.open{ display:block;animation:dropIn .18s ease; }
-  @keyframes dropIn{ from{opacity:0;transform:translateY(-6px)} to{opacity:1;transform:none} }
-  .user-menu-dropdown button{width:100%;cursor:pointer;font:inherit;font-weight:700;font-size:.86rem;
-    padding:11px 14px;border-radius:10px;border:none;background:transparent;color:var(--txt);
-    text-align:left;transition:.15s;}
-  .user-menu-dropdown button:hover{ background:rgba(255,255,255,.08); }
-  .user-menu-dropdown button.hide{ display:none; }
-  .user-menu-dropdown hr{border:none;border-top:1px solid var(--stroke);margin:6px 0;}
-
-  /* ---------- TABS (Scrollable en móvil) ---------- */
-  .tabs-wrapper{max-width:1100px;margin:20px auto 0;padding:0 16px;overflow-x:auto;white-space:nowrap;scrollbar-width:none;}
-  .tabs-wrapper::-webkit-scrollbar{display:none;}
-  .tabs{display:inline-flex;gap:10px;padding-bottom:4px;}
-  .tab{cursor:pointer;font:inherit;font-weight:700;font-size:.9rem;padding:10px 16px;
-    border-radius:14px;color:var(--muted);background:var(--panel);border:1px solid var(--stroke);transition:.22s;touch-action:manipulation;}
-  .tab:hover{ color:var(--txt); transform:translateY(-2px) }
-  .tab.active{color:#0a0612;background:linear-gradient(135deg,#b14aed,#00e5ff);
-    border-color:transparent;box-shadow:0 8px 26px rgba(177,74,237,.45);}
-
-  main{ max-width:1100px;margin:0 auto;padding:20px 16px 70px }
-  .panel{ display:none; animation:fade .35s ease }
-  .panel.active{ display:block }
-  @keyframes fade{ from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:none} }
-  h2{font-size:1.5rem;letter-spacing:.5px;margin-bottom:6px;
-    background:linear-gradient(90deg,#fff,#b9a8e8);-webkit-background-clip:text;
-    background-clip:text;color:transparent;}
-  .sub{ color:var(--muted);font-size:.9rem;margin-bottom:20px }
-
-  /* ---------- CARDS ---------- */
-  .cards-grid{display:grid;gap:16px;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));perspective:900px;}
-  .card{position:relative;border-radius:18px;padding:14px;
-    background:linear-gradient(160deg,var(--c1),var(--c2));color:#0b0712;
-    box-shadow:0 12px 28px rgba(0,0,0,.5);transition:transform .25s ease, box-shadow .25s ease;
-    transform-style:preserve-3d;overflow:hidden;}
-  .card::after{content:'';position:absolute;inset:0;pointer-events:none;
-    background:linear-gradient(120deg, rgba(255,255,255,.55), transparent 42%, transparent 60%, rgba(255,255,255,.22));
-    opacity:.55;}
-  .card:hover{transform:translateY(-6px) rotateX(4deg) rotateY(-4deg) scale(1.02);
-    box-shadow:0 22px 46px rgba(177,74,237,.45);}
-  .card-top{ display:flex;justify-content:space-between;align-items:flex-start;font-weight:900 }
-  .rating{ font-size:1.5rem;line-height:1 }
-  .pos{ font-size:.7rem;letter-spacing:1px;background:rgba(0,0,0,.22);color:#fff;padding:3px 8px;border-radius:8px }
-  .card-emoji{ font-size:3rem;text-align:center;margin:8px 0 4px;filter:drop-shadow(0 6px 10px rgba(0,0,0,.35)) }
-  .card-name{ font-weight:900;font-size:.95rem;text-align:center;line-height:1.15 }
-  .card-club{ text-align:center;font-size:.72rem;font-weight:700;opacity:.72;margin-top:3px;letter-spacing:.4px }
-  .card-bottom{display:flex;align-items:center;justify-content:space-between;gap:8px;
-    margin-top:12px;padding-top:10px;border-top:1px solid rgba(0,0,0,.18);}
-  .price{ font-weight:900;font-size:.9rem }
-  .buy{cursor:pointer;font:inherit;font-weight:800;font-size:.75rem;padding:8px 12px;border-radius:10px;
-    border:none;background:#0b0712;color:#fff;transition:.2s;touch-action:manipulation;}
-  .buy:hover:not(:disabled){ background:#1d1230;transform:scale(1.06) }
-  .buy:disabled{ background:rgba(11,7,18,.35);color:rgba(255,255,255,.75);cursor:default }
-  .card.owned{ box-shadow:0 0 0 3px #ffd23f, 0 12px 30px rgba(255,210,63,.35) }
-  .owned-tag{position:absolute;top:10px;right:10px;z-index:2;background:#ffd23f;color:#0b0712;
-    font-weight:900;font-size:.65rem;padding:4px 9px;border-radius:999px;letter-spacing:.5px;}
-  .trade-btn{position:absolute;bottom:12px;left:12px;z-index:3;cursor:pointer;font:inherit;
-    font-weight:800;font-size:.7rem;padding:6px 11px;border-radius:9px;
-    background:rgba(0,229,255,.2);color:#0b0712;border:1px solid rgba(0,229,255,.5);
-    transition:.2s;backdrop-filter:blur(4px);touch-action:manipulation;}
-  .trade-btn:hover{ background:#00e5ff;transform:scale(1.08) }
-
-  /* ---------- SHOP ITEMS ---------- */
-  .items-grid{display:grid;gap:16px;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));}
-  .shop-item{position:relative;border-radius:18px;padding:16px;
-    background:linear-gradient(160deg,var(--c1),var(--c2));color:#0b0712;
-    box-shadow:0 12px 28px rgba(0,0,0,.4);transition:.25s;overflow:hidden;}
-  .shop-item:hover{ transform:translateY(-6px);box-shadow:0 20px 40px rgba(0,0,0,.55); }
-  .shop-item .cat-tag{position:absolute;top:10px;left:10px;background:rgba(0,0,0,.35);color:#fff;
-    font-size:.65rem;font-weight:900;padding:4px 9px;border-radius:8px;letter-spacing:.5px;}
-  .shop-item .s-emoji{font-size:3rem;text-align:center;display:block;margin:6px 0 8px;
-    filter:drop-shadow(0 6px 10px rgba(0,0,0,.35));}
-  .shop-item .s-name{font-weight:900;font-size:1rem;text-align:center;}
-  .shop-item .s-desc{font-size:.75rem;text-align:center;opacity:.78;margin-top:6px;line-height:1.4;
-    min-height:2.2em;}
-  .shop-item .s-bottom{display:flex;align-items:center;justify-content:space-between;gap:8px;
-    margin-top:14px;padding-top:12px;border-top:1px solid rgba(0,0,0,.18);}
-  .shop-item .s-price{font-weight:900;font-size:.9rem;}
-  .shop-item .s-owned{font-weight:900;font-size:.72rem;color:#0b0712;background:#ffd23f;
-    padding:4px 9px;border-radius:999px;letter-spacing:.3px;}
-
-  /* ---------- TOP ---------- */
-  .top-list{ display:flex;flex-direction:column;gap:10px }
-  .rank{display:flex;align-items:center;gap:12px;padding:12px 16px;border-radius:16px;
-    background:var(--panel);border:1px solid var(--stroke);transition:.2s;}
-  .rank:hover{ transform:translateX(5px);border-color:rgba(177,74,237,.55) }
-  .rank .pos-num{font-weight:900;font-size:1rem;min-width:32px;text-align:center;color:var(--muted);}
-  .rank .who{ flex:1;font-weight:800;font-size:.95rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-  .rank .who small{ display:block;font-weight:600;font-size:.72rem;color:var(--muted);margin-top:2px;
-    overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-  .rank .amount{ font-weight:900;color:var(--gold);font-size:.95rem;white-space:nowrap }
-  .rank.me{background:linear-gradient(135deg, rgba(177,74,237,.28), rgba(0,229,255,.16));
-    border-color:var(--neon);box-shadow:0 0 26px rgba(177,74,237,.3);}
-  .rank.p1 .pos-num{ color:#ffd23f;font-size:1.2rem }
-  .rank.p2 .pos-num{ color:#d8dbe6;font-size:1.1rem }
-  .rank.p3 .pos-num{ color:#e0955a;font-size:1.1rem }
-  .rank .r-avatar{width:36px;height:36px;display:flex;align-items:center;justify-content:center;
-    border-radius:10px;font-size:1.2rem;background:var(--panel);border:1px solid var(--stroke);
-    background-size:cover;background-position:center;}
-  .admin-badge{display:inline-block;font-size:.6rem;font-weight:900;letter-spacing:.5px;
-    background:linear-gradient(135deg,#ffd23f,#ff9f1c);color:#0b0712;padding:2px 6px;
-    border-radius:999px;margin-left:6px;vertical-align:middle;}
-
-  /* ---------- PERFIL (Estilo Discord) ---------- */
-  .profile-card{background: #0f0817; border-radius:20px; overflow:hidden;
-    border:1px solid var(--stroke);margin-bottom:20px; box-shadow:0 10px 30px rgba(0,0,0,.4);}
-  .profile-banner{height:140px;background-size:cover;background-position:center;
-    background-repeat:no-repeat; position:relative;}
-  .edit-image-btn{position:absolute;bottom:10px;right:10px;background:rgba(0,0,0,.6);color:#fff;
-    padding:6px 12px;border-radius:8px;font-size:.75rem;font-weight:700;cursor:pointer;
-    backdrop-filter:blur(4px);border:1px solid rgba(255,255,255,0.2);transition:.2s;}
-  .edit-image-btn:hover{ background:rgba(0,0,0,.9); }
-  
-  .profile-info{padding:0 20px 20px;position:relative;}
-  .profile-avatar-big{width:96px;height:96px;border-radius:50%;background-size:cover;
-    background-position:center;position:relative;margin-top:-48px;border:5px solid #0f0817;
-    box-shadow:0 8px 24px rgba(0,0,0,0.5);display:flex;align-items:center;justify-content:center;
-    font-size:2.8rem;background-color:#140b22;}
-  .edit-avatar-btn{position:absolute;bottom:0;right:0;background:#00e5ff;color:#0a0612;
-    width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;
-    cursor:pointer;font-size:.9rem;border:2px solid #0f0817;transition:.2s;}
-  .edit-avatar-btn:hover{ transform:scale(1.1); }
-
-  .profile-name-big{font-size:1.4rem;font-weight:900;margin-top:12px;}
-  .profile-bio-big{color:var(--muted);font-size:.9rem;margin:4px 0 12px;}
-  .profile-stats{display:flex;gap:12px;flex-wrap:wrap;}
-  .profile-stat{background:rgba(0,0,0,.25);padding:6px 12px;border-radius:10px;font-weight:800;
-    font-size:.8rem;display:flex;align-items:center;gap:6px;}
-
-  .profile-form{display:grid;grid-template-columns:1fr 1fr;gap:14px;
-    padding:20px;background:var(--panel);border:1px solid var(--stroke);border-radius:20px;}
-  .profile-form label{display:flex;flex-direction:column;gap:6px;font-weight:700;font-size:.8rem;color:var(--muted);}
-  .profile-form input{font:inherit;font-weight:700;padding:12px 14px;border-radius:12px;
-    background:rgba(0,0,0,.25);border:1px solid var(--stroke);color:var(--txt);outline:none;}
-  .profile-form input:focus{ border-color:var(--neon2) }
-  .profile-form input[type=color]{height:46px;padding:4px;cursor:pointer;}
-  .profile-form .full{grid-column:1/-1;}
-  .emoji-picker{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0;}
-  .emoji-picker button{cursor:pointer;font-size:1.3rem;padding:6px 8px;border-radius:10px;
-    background:rgba(0,0,0,.25);border:1px solid var(--stroke);transition:.15s;}
-  .emoji-picker button:hover{ transform:scale(1.12);border-color:var(--neon);}
-  .banner-presets{display:flex;flex-wrap:wrap;gap:8px;margin:6px 0;}
-  .banner-presets button{cursor:pointer;width:48px;height:32px;border-radius:9px;border:2px solid transparent;
-    transition:.15s;}
-  .banner-presets button:hover{ transform:scale(1.1); }
-  .banner-presets button.selected{ border-color:#fff;box-shadow:0 0 0 2px var(--neon); }
-  
-  .collection-grid{display:grid;gap:12px;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));margin-top:14px;}
-  .collection-item{padding:12px;border-radius:14px;text-align:center;font-weight:800;font-size:.8rem;
-    background:linear-gradient(160deg,var(--c1),var(--c2));color:#0b0712;}
-  .collection-item .c-emoji{font-size:1.8rem;display:block;margin-bottom:4px;}
-
-  .danger-btn{background:rgba(255,80,110,.15);color:#ff8fa3;border:1px solid rgba(255,80,110,.4);
-    font:inherit;font-weight:800;font-size:.85rem;padding:12px 18px;border-radius:12px;cursor:pointer;
-    transition:.15s;margin-top:14px;touch-action:manipulation;}
-  .danger-btn:hover{ background:rgba(255,80,110,.3); }
-
-  /* ---------- NOSE ---------- */
-  .nose-box{text-align:center;padding:40px 20px;border-radius:22px;
-    background:var(--panel);border:1px dashed rgba(177,74,237,.5);}
-  .nose-emoji{ font-size:4rem;margin-bottom:14px;animation:float 3s ease-in-out infinite }
-  @keyframes float{ 50%{ transform:translateY(-12px) rotate(6deg) } }
-  .nose-answer{margin-top:22px;font-size:1.1rem;font-weight:800;min-height:34px;color:var(--neon2);}
-
-  /* ---------- MODALES ---------- */
-  .modal-backdrop{position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.78);
-    backdrop-filter:blur(8px);display:none;align-items:center;justify-content:center;padding:16px;}
-  .modal-backdrop.open{ display:flex; }
-  .modal{background:#140b22;border:1px solid var(--stroke);border-radius:20px;padding:24px;
-    max-width:420px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,.7);max-height:90vh;overflow-y:auto;}
-  .modal h3{ margin-bottom:6px;font-size:1.2rem; }
-  .modal p{ color:var(--muted);font-size:.86rem;margin-bottom:16px; }
-  .modal select{width:100%;font:inherit;font-weight:700;padding:12px 14px;border-radius:12px;
-    background:var(--panel);border:1px solid var(--stroke);color:var(--txt);outline:none;margin-bottom:14px;}
-  .modal-actions{ display:flex;gap:10px;margin-top:8px; }
-  .modal-actions > *{ flex:1; }
-  .ghost{cursor:pointer;font:inherit;font-weight:700;padding:11px 20px;border-radius:12px;
-    background:transparent;color:var(--muted);border:1px solid var(--stroke);transition:.2s;touch-action:manipulation;}
-  .ghost:hover{ color:var(--txt);border-color:var(--neon) }
-  .dir{cursor:pointer;font:inherit;font-weight:800;font-size:.95rem;padding:12px 20px;border-radius:12px;
-    color:#0a0612;background:linear-gradient(135deg,#00e5ff,#7ef7c8);border:none;transition:.2s;
-    box-shadow:0 8px 22px rgba(0,229,255,.28);touch-action:manipulation;}
-  .dir:hover:not(:disabled){ transform:translateY(-2px); box-shadow:0 12px 30px rgba(0,229,255,.45) }
-  .dir:disabled{ opacity:.5;cursor:not-allowed;box-shadow:none }
-
-  /* ---------- ADMIN PANEL ---------- */
-  .admin-panel{background:#140b22;border:1px solid var(--stroke);border-radius:20px;
-    width:100%;max-width:960px;max-height:95vh;display:flex;flex-direction:column;overflow:hidden;
-    box-shadow:0 20px 60px rgba(0,0,0,.7);}
-  .admin-header{padding:14px 20px;display:flex;align-items:center;justify-content:space-between;
-    border-bottom:1px solid var(--stroke);gap:10px;}
-  .admin-header h2{font-size:1.15rem;margin:0;background:none;color:var(--txt);-webkit-text-fill-color:var(--txt);}
-  
-  .admin-tabs-wrapper{overflow-x:auto;white-space:nowrap;scrollbar-width:none;border-bottom:1px solid var(--stroke);}
-  .admin-tabs-wrapper::-webkit-scrollbar{display:none;}
-  .admin-tabs{display:inline-flex;gap:6px;padding:8px 20px 0;}
-  .admin-tab{background:transparent;border:none;color:var(--muted);font:inherit;font-weight:700;
-    padding:10px 14px;cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;touch-action:manipulation;}
-  .admin-tab.active{ color:var(--txt);border-color:var(--neon); }
-  
-  .admin-body{padding:16px;overflow-y:auto;flex:1;}
-  .admin-section{ display:none; }
-  .admin-section.active{ display:block; }
-  .admin-section h4{ font-size:.85rem;margin:0 0 10px;color:var(--muted);letter-spacing:.5px;text-transform:uppercase; }
-  .admin-section h4:not(:first-child){ margin-top:20px; }
-
-  .admin-row{display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:10px 12px;border-radius:12px;
-    background:var(--panel);border:1px solid var(--stroke);margin-bottom:8px;}
-  .admin-row input[type=text], .admin-row input[type=number]{
-    font:inherit;font-weight:700;font-size:.85rem;padding:8px 10px;border-radius:9px;
-    background:rgba(0,0,0,.25);border:1px solid var(--stroke);color:var(--txt);outline:none;flex:1;min-width:80px;}
-  .admin-row input[type=color]{ width:34px;height:34px;padding:2px;border-radius:8px;border:1px solid var(--stroke);
-    background:transparent;cursor:pointer;flex:none;}
-  .admin-row .a-avatar{font-size:1.3rem;min-width:28px;text-align:center;}
-  .admin-row .a-tag{font-size:.7rem;color:var(--muted);font-weight:700;padding:3px 7px;
-    border-radius:6px;background:rgba(255,255,255,.06);white-space:nowrap;}
-  .admin-row .a-actions{display:flex;gap:6px;margin-left:auto;flex-wrap:wrap;}
-  
-  .admin-btn{cursor:pointer;font:inherit;font-weight:700;font-size:.75rem;padding:7px 11px;
-    border-radius:8px;border:1px solid var(--stroke);background:rgba(255,255,255,.05);color:var(--txt);
-    transition:.15s;white-space:nowrap;touch-action:manipulation;}
-  .admin-btn:hover{ background:rgba(255,255,255,.12); }
-  .admin-btn.primary{ background:linear-gradient(135deg,#00e5ff,#7ef7c8);color:#0a0612;border:none; }
-  .admin-btn.primary:hover{ filter:brightness(1.1); }
-  .admin-btn.danger{ background:rgba(255,80,110,.18);color:#ff8fa3;border-color:rgba(255,80,110,.35); }
-  .admin-btn.danger:hover{ background:rgba(255,80,110,.3); }
-  .admin-btn.on{ background:rgba(126,247,200,.2);color:#7ef7c8;border-color:rgba(126,247,200,.4); }
-  .admin-btn.admin-toggle{ background:rgba(255,210,63,.15);color:var(--gold);border-color:rgba(255,210,63,.35); }
-  .admin-btn.admin-toggle.is-admin{ background:linear-gradient(135deg,#ffd23f,#ff9f1c);color:#0b0712;border:none; }
-
-  .admin-form{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px;padding:12px;border-radius:12px;
-    background:rgba(0,229,255,.05);border:1px dashed rgba(0,229,255,.3);}
-  .admin-form input{font:inherit;font-weight:700;font-size:.85rem;padding:8px 10px;border-radius:9px;
-    background:rgba(0,0,0,.25);border:1px solid var(--stroke);color:var(--txt);outline:none;flex:1;min-width:100px;}
-  .admin-form input::placeholder{ color:rgba(154,144,184,.7); }
-  
-  .rules-help{background:rgba(0,229,255,.05);border:1px dashed rgba(0,229,255,.3);
-    border-radius:12px;padding:14px;margin-top:14px;font-size:.8rem;line-height:1.6;}
-  .rules-help pre{background:rgba(0,0,0,.4);padding:10px;border-radius:8px;overflow-x:auto;
-    font-size:.7rem;margin-top:10px;color:#7ef7c8;border:1px solid var(--stroke);}
-
-  .toast{position:fixed;bottom:20px;left:50%;transform:translate(-50%,120%);
-    background:#1a1030;border:1px solid var(--neon);padding:12px 20px;border-radius:14px;
-    font-weight:800;font-size:.9rem;box-shadow:0 12px 40px rgba(177,74,237,.45);
-    transition:transform .35s cubic-bezier(.3,1.4,.5,1);z-index:999;max-width:90vw;text-align:center;}
-  .toast.show{ transform:translate(-50%,0) }
-  footer{text-align:center;padding:20px 16px 40px;color:var(--muted);font-size:.8rem;}
-
-  /* --- RESPONSIVE (Móviles) --- */
-  @media(max-width:600px){
-    .logo{font-size:1.2rem}
-    .coins-pill{font-size:.85rem;padding:6px 10px}
-    .profile-form { grid-template-columns: 1fr; }
-    .profile-banner{ height: 100px; }
-    .profile-avatar-big{ width: 80px; height: 80px; font-size: 2.2rem; margin-top: -40px; }
-    .admin-row { flex-direction: column; align-items: stretch; }
-    .admin-row input[type=text], .admin-row input[type=number] { width: 100%; }
-    .admin-row .a-actions { margin-left: 0; justify-content: flex-end; margin-top: 6px; }
-    .admin-row .a-avatar, .admin-row .a-tag, .admin-row .admin-toggle { display: inline-block; margin-bottom: 4px; }
-    .admin-form input { min-width: 100%; }
-  }
+:root{
+  --bg-base:#0a0712; --panel:#17102a; --panel2:#1f1638; --border:#2e2350;
+  --text:#f2ecff; --muted:#9d92bd;
+  --accent:#a855f7; --accent2:#7c3aed; --accent-glow:rgba(168,85,247,.4);
+  --gold:#fbbf24; --green:#22c55e; --red:#ef4444;
+  --bg-glow1:#2a1550; --bg-glow2:#3a1a3f;
+}
+body[data-theme="cyber"]{
+  --bg-base:#030712; --panel:#0a1628; --panel2:#0f1f38; --border:#1e3a5f;
+  --accent:#06b6d4; --accent2:#0891b2; --accent-glow:rgba(6,182,212,.4);
+  --muted:#7dd3fc; --bg-glow1:#0c4a6e; --bg-glow2:#164e63;
+}
+body[data-theme="crimson"]{
+  --bg-base:#0a0303; --panel:#200808; --panel2:#2a0a0a; --border:#4a1a1a;
+  --accent:#ef4444; --accent2:#b91c1c; --accent-glow:rgba(239,68,68,.4);
+  --muted:#fca5a5; --bg-glow1:#450a0a; --bg-glow2:#7f1d1d;
+}
+body[data-theme="emerald"]{
+  --bg-base:#021010; --panel:#0a1f1f; --panel2:#0f2a2a; --border:#1f4545;
+  --accent:#10b981; --accent2:#059669; --accent-glow:rgba(16,185,129,.4);
+  --muted:#6ee7b7; --bg-glow1:#064e3b; --bg-glow2:#065f46;
+}
+body[data-theme="gold"]{
+  --bg-base:#0a0703; --panel:#1f180a; --panel2:#2a2010; --border:#3d3018;
+  --accent:#f59e0b; --accent2:#d97706; --accent-glow:rgba(245,158,11,.4);
+  --muted:#fcd34d; --bg-glow1:#451a03; --bg-glow2:#78350f;
+}
+body[data-theme="synthwave"]{
+  --bg-base:#0f0318; --panel:#1f0a2e; --panel2:#2a0f3d; --border:#4d1a6b;
+  --accent:#ec4899; --accent2:#db2777; --accent-glow:rgba(236,72,153,.4);
+  --muted:#f9a8d4; --bg-glow1:#500724; --bg-glow2:#831843;
+}
+body[data-theme="light"]{
+  --bg-base:#f8f7ff; --panel:#ffffff; --panel2:#f3f0ff; --border:#e0d9f5;
+  --text:#1a0e2e; --muted:#6b5b8d;
+  --accent:#a855f7; --accent2:#7c3aed; --accent-glow:rgba(168,85,247,.25);
+  --bg-glow1:#ddd6fe; --bg-glow2:#fbcfe8;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  font-family:"Inter","Segoe UI",system-ui,-apple-system,sans-serif;
+  color:var(--text); min-height:100vh;
+  background:
+    radial-gradient(900px 500px at 15% -10%, var(--bg-glow1) 0%, transparent 60%),
+    radial-gradient(700px 400px at 100% 0%, var(--bg-glow2) 0%, transparent 55%),
+    var(--bg-base);
+  transition:background .4s ease;
+}
+.hidden{display:none!important}
+.center-screen{min-height:100vh;display:grid;place-items:center;padding:24px}
+.muted{color:var(--muted)}
+.small-text{font-size:13px}
+input,select,textarea{
+  width:100%;background:var(--panel2);border:1px solid var(--border);
+  border-radius:11px;padding:11px 13px;color:var(--text);
+  font-size:14px;font-family:inherit;outline:none;
+  transition:border-color .15s, box-shadow .15s;
+}
+input:focus,select:focus,textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-glow)}
+label{font-size:12px;color:var(--muted);display:block;margin:6px 0 4px;font-weight:600}
+.btn{
+  border:1px solid var(--border);background:var(--panel2);color:var(--text);
+  padding:11px 16px;border-radius:11px;font-size:14px;font-weight:600;cursor:pointer;
+  font-family:inherit;transition:transform .1s,background .15s,border-color .15s,filter .15s;
+}
+.btn:hover{background:var(--border);border-color:var(--accent)}
+.btn:active{transform:scale(.97)}
+.btn.primary{background:linear-gradient(135deg,var(--accent),var(--accent2));border:none;color:#fff;box-shadow:0 4px 20px var(--accent-glow)}
+.btn.primary:hover{filter:brightness(1.1);border:none}
+.btn.danger{background:rgba(239,68,68,.15);border-color:rgba(239,68,68,.4);color:#fca5a5}
+.btn.danger:hover{background:rgba(239,68,68,.25)}
+.btn.google{background:#fff;color:#111;font-weight:700;border:none}
+.btn.small{padding:7px 12px;font-size:13px}
+.btn.ghost{background:transparent}
+.btn:disabled{opacity:.55;cursor:not-allowed}
+.msg{font-size:13px;min-height:18px;color:#fca5a5;margin-top:8px}
+.auth-card{
+  width:100%;max-width:400px;padding:32px;display:flex;flex-direction:column;gap:12px;
+  background:linear-gradient(180deg,var(--panel2),var(--panel));
+  border:1px solid var(--border);border-radius:24px;
+  box-shadow:0 30px 80px rgba(0,0,0,.6), 0 0 0 1px var(--accent-glow);
+  animation:fadeUp .5s cubic-bezier(.2,.8,.2,1);
+}
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:none}}
+.brand{font-size:34px;font-weight:900;letter-spacing:-.5px;text-align:center;background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;background-clip:text;color:transparent}
+.brand.small{font-size:20px;text-align:left}
+.divider{display:flex;align-items:center;gap:10px;color:var(--muted);font-size:12px;margin:4px 0}
+.divider::before,.divider::after{content:"";flex:1;height:1px;background:var(--border)}
+.topbar{
+  display:flex;justify-content:space-between;align-items:center;gap:14px;
+  padding:14px 22px;border-bottom:1px solid var(--border);
+  background:rgba(15,9,26,.6);backdrop-filter:blur(16px) saturate(180%);
+  position:sticky;top:0;z-index:20;
+}
+body[data-theme="light"] .topbar{background:rgba(255,255,255,.7)}
+.user-area{display:flex;align-items:center;gap:10px}
+.uname{font-weight:700;font-size:14px;max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.coin-pill{
+  background:linear-gradient(135deg,rgba(251,191,36,.2),rgba(251,191,36,.05));
+  border:1px solid rgba(251,191,36,.4);color:var(--gold);
+  padding:7px 14px;border-radius:999px;font-weight:800;font-size:14px;
+  box-shadow:0 0 20px rgba(251,191,36,.15);transition:.2s;
+}
+.coin-pill.bump{animation:bump .5s ease}
+@keyframes bump{50%{transform:scale(1.15);box-shadow:0 0 30px rgba(251,191,36,.5)}}
+.avatar{
+  width:38px;height:38px;border-radius:50%;overflow:hidden;flex-shrink:0;
+  background:linear-gradient(135deg,var(--accent),var(--accent2));
+  display:grid;place-items:center;font-weight:800;font-size:15px;color:#fff;
+  border:2px solid var(--border);cursor:pointer;transition:border-color .15s,transform .15s;
+}
+.avatar:hover{border-color:var(--accent);transform:scale(1.05)}
+.avatar img{width:100%;height:100%;object-fit:cover;display:none}
+.avatar.has-img img{display:block}
+.avatar.has-img .initial{display:none}
+.avatar.lg{width:84px;height:84px;font-size:32px;border-width:3px;cursor:default}
+.avatar.lg:hover{transform:none;border-color:var(--border)}
+.tabs{display:flex;gap:6px;padding:14px 22px 0;overflow-x:auto;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tab{
+  background:transparent;border:1px solid transparent;color:var(--muted);
+  padding:9px 16px;border-radius:11px;font-size:14px;font-weight:600;cursor:pointer;
+  font-family:inherit;white-space:nowrap;transition:.2s;
+}
+.tab:hover{color:var(--text);background:var(--panel2)}
+.tab.active{color:#fff;background:linear-gradient(135deg,var(--accent),var(--accent2));box-shadow:0 4px 20px var(--accent-glow)}
+main{padding:22px;max-width:1150px;margin:0 auto}
+.tab-panel{animation:fadeIn .25s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.hero{
+  background:linear-gradient(135deg,var(--panel2),var(--panel));
+  border:1px solid var(--border);border-radius:22px;padding:32px;text-align:center;
+  position:relative;overflow:hidden;
+}
+.hero::before{content:"";position:absolute;inset:-50%;background:radial-gradient(circle at 50% 0%, var(--accent-glow), transparent 60%);opacity:.4;pointer-events:none}
+.hero > *{position:relative}
+.hero h2{font-size:22px;margin-bottom:14px;font-weight:700}
+.coin-big{font-size:44px;font-weight:900;color:var(--gold);margin-bottom:16px;letter-spacing:-1px}
+.coin-big small{font-size:15px;color:var(--muted);font-weight:600;margin-left:6px}
+.hero-stats{display:flex;justify-content:center;gap:44px;margin-top:10px;flex-wrap:wrap}
+.stat{display:flex;flex-direction:column;gap:2px}
+.stat span{font-size:24px;font-weight:900}
+.stat label{font-size:12px;color:var(--muted);margin:0;font-weight:600}
+.section-title{margin:26px 0 4px;font-size:17px;font-weight:800}
+.row-between{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.row{display:flex;gap:8px;margin-top:10px}
+.cards-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(178px,1fr));gap:16px;margin-top:14px}
+.lui-card{
+  background:linear-gradient(180deg,var(--panel2),var(--panel));
+  border:2px solid var(--border);border-radius:15px;overflow:hidden;
+  cursor:pointer;position:relative;
+  transition:transform .2s cubic-bezier(.2,.8,.2,1), box-shadow .25s;
+  display:flex;flex-direction:column;
+}
+.lui-card:hover{transform:translateY(-5px) scale(1.02)}
+.lui-card .card-img{
+  height:150px;display:grid;place-items:center;background:rgba(0,0,0,.3);
+  font-size:44px;color:var(--border);overflow:hidden;position:relative;
+}
+.lui-card .card-img img{width:100%;height:100%;object-fit:cover}
+.card-body{padding:11px 13px 14px;display:flex;flex-direction:column;flex:1}
+.card-body h4{font-size:14px;margin-bottom:6px;word-break:break-word;font-weight:700}
+.card-body p{font-size:12px;color:var(--muted);margin-top:6px;line-height:1.4}
+.rarity-tag{font-size:10px;text-transform:uppercase;letter-spacing:.9px;font-weight:800;padding:3px 10px;border-radius:999px;background:rgba(255,255,255,.08);color:var(--muted);display:inline-block;align-self:flex-start}
+.r-common{border-color:#4b5563}
+.r-common .rarity-tag{color:#cbd5e1;background:rgba(203,213,225,.12)}
+.r-rare{border-color:#3b82f6;box-shadow:0 0 18px rgba(59,130,246,.28)}
+.r-rare .rarity-tag{color:#93c5fd;background:rgba(59,130,246,.15)}
+.r-epic{border-color:#a855f7;box-shadow:0 0 20px rgba(168,85,247,.32)}
+.r-epic .rarity-tag{color:#d8b4fe;background:rgba(168,85,247,.18)}
+.r-legendary{border-color:#f59e0b;box-shadow:0 0 24px rgba(245,158,11,.4)}
+.r-legendary .rarity-tag{color:#fcd34d;background:rgba(245,158,11,.18)}
+.r-legendary::after{content:"";position:absolute;inset:0;pointer-events:none;border-radius:15px;background:linear-gradient(110deg, transparent 30%, rgba(255,255,255,.15) 50%, transparent 70%);transform:translateX(-100%);animation:shine 4s infinite}
+.r-mythic{border-color:#f43f5e;box-shadow:0 0 30px rgba(244,63,94,.5)}
+.r-mythic .rarity-tag{color:#fda4af;background:rgba(244,63,94,.2)}
+.r-mythic::after{content:"";position:absolute;inset:0;pointer-events:none;border-radius:15px;background:linear-gradient(110deg, transparent 30%, rgba(255,255,255,.2) 50%, transparent 70%);transform:translateX(-100%);animation:shine 2.5s infinite}
+@keyframes shine{0%,20%{transform:translateX(-100%)}80%,100%{transform:translateX(100%)}}
+.empty{margin-top:20px;text-align:center;padding:40px 20px;border:1px dashed var(--border);border-radius:16px;font-size:40px;line-height:1.4}
+.empty p{font-size:14px;color:var(--muted);margin-top:8px}
+.skeleton{background:linear-gradient(90deg, var(--panel) 0%, var(--panel2) 50%, var(--panel) 100%);background-size:200% 100%;animation:shimmer 1.4s infinite;border-radius:15px}
+.skeleton-card{height:230px;border:1px solid var(--border)}
+@keyframes shimmer{0%{background-position:-200% 0}100%{background-position:200% 0}}
+.leaderboard{list-style:none;margin-top:16px;display:flex;flex-direction:column;gap:8px}
+.leaderboard li{display:flex;align-items:center;gap:12px;background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:12px 16px;transition:.15s}
+.leaderboard li:hover{border-color:var(--accent);transform:translateX(2px)}
+.leaderboard .rank{font-weight:900;width:44px;font-size:14px;color:var(--muted);text-align:center;flex-shrink:0}
+.leaderboard .lb-name{flex:1;font-weight:700;font-size:14px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.leaderboard .lb-coins{color:var(--gold);font-weight:800;font-size:14px;flex-shrink:0}
+.leaderboard .lb-avatar{width:32px;height:32px;flex-shrink:0}
+.leaderboard li.top1{border-color:var(--gold);background:linear-gradient(90deg,rgba(251,191,36,.14),var(--panel));box-shadow:0 0 20px rgba(251,191,36,.15)}
+.leaderboard li.top2{border-color:#cbd5e1;background:linear-gradient(90deg,rgba(203,213,225,.1),var(--panel))}
+.leaderboard li.top3{border-color:#d97706;background:linear-gradient(90deg,rgba(217,119,6,.1),var(--panel))}
+.profile-header{
+  background:linear-gradient(135deg,var(--panel2),var(--panel));
+  border:1px solid var(--border);border-radius:22px;padding:28px;
+  display:flex;align-items:center;gap:22px;flex-wrap:wrap;
+  position:relative;overflow:hidden;
+}
+.profile-header::before{content:"";position:absolute;inset:-50%;background:radial-gradient(circle at 30% 0%, var(--accent-glow), transparent 55%);opacity:.35;pointer-events:none}
+.profile-header > *{position:relative}
+.profile-info{flex:1;min-width:200px}
+.profile-info h2{font-size:24px;font-weight:900;margin-bottom:4px}
+.profile-info .bio{color:var(--muted);font-size:14px;line-height:1.4;margin-bottom:10px;min-height:18px}
+.profile-stats{display:flex;gap:20px;flex-wrap:wrap;font-size:13px;font-weight:600}
+.profile-stats span{color:var(--muted)}
+.profile-stats b{color:var(--text)}
+.theme-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:10px;margin-top:10px}
+.theme-swatch{background:var(--panel2);border:2px solid var(--border);border-radius:12px;padding:12px;cursor:pointer;font-family:inherit;color:var(--text);display:flex;flex-direction:column;align-items:center;gap:8px;transition:.15s}
+.theme-swatch:hover{border-color:var(--accent);transform:translateY(-2px)}
+.theme-swatch.active{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-glow)}
+.theme-colors{display:flex;gap:4px}
+.theme-colors span{width:22px;height:22px;border-radius:6px;box-shadow:inset 0 0 0 1px rgba(255,255,255,.15)}
+.theme-name{font-size:12px;font-weight:700}
+.admin-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px;margin-top:16px}
+.panel{background:var(--panel);border:1px solid var(--border);border-radius:16px;padding:18px}
+.panel h3{font-size:15px;margin-bottom:10px;font-weight:800}
+.card-wrap{display:flex;flex-direction:column;gap:6px;position:relative}
+.card-owner{font-size:11px;color:var(--muted);padding:4px 8px;background:var(--panel);border-radius:8px;border:1px solid var(--border);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:600}
+/* === TIENDA === */
+.shop-footer{margin-top:auto;padding-top:10px;border-top:1px solid var(--border);display:flex;flex-direction:column;gap:6px}
+.shop-price{font-size:18px;font-weight:900;color:var(--gold);letter-spacing:-.5px}
+.shop-stock{font-size:11px;color:var(--muted);font-weight:600}
+.shop-stock.low{color:#fbbf24}
+.btn.buy{
+  background:linear-gradient(135deg,#fbbf24,#d97706);border:none;color:#1a0e2e;
+  font-weight:800;padding:9px 12px;font-size:13px;margin-top:4px;
+  box-shadow:0 4px 14px rgba(251,191,36,.3);
+}
+.btn.buy:hover{filter:brightness(1.1)}
+.btn.buy:disabled{background:var(--panel2);color:var(--muted);box-shadow:none;filter:none}
+.upload-row{display:flex;gap:8px;align-items:center}
+.upload-row .btn{padding:11px 14px;flex-shrink:0}
+.image-preview{margin-top:8px;max-width:180px;border-radius:10px;overflow:hidden;border:1px solid var(--border)}
+.image-preview:empty{display:none}
+.image-preview img{width:100%;height:auto;display:block}
+.modal{position:fixed;inset:0;z-index:100;display:grid;place-items:center;padding:20px}
+.modal-backdrop{position:absolute;inset:0;background:rgba(0,0,0,.8);backdrop-filter:blur(6px);animation:fadeIn .2s ease}
+.modal-content{position:relative;z-index:1;width:100%;max-width:380px;animation:pop .25s cubic-bezier(.2,.8,.2,1)}
+@keyframes pop{from{opacity:0;transform:scale(.9)}to{opacity:1;transform:none}}
+.modal-content .lui-card{cursor:default;transform:none!important}
+.modal-content .lui-card .card-img{height:250px}
+.modal-content .lui-card .card-body h4{font-size:18px}
+#toasts{position:fixed;bottom:22px;right:22px;z-index:200;display:flex;flex-direction:column;gap:10px;pointer-events:none}
+.toast{background:var(--panel2);border:1px solid var(--border);border-radius:12px;padding:12px 18px;font-size:14px;font-weight:600;display:flex;align-items:center;gap:10px;box-shadow:0 10px 30px rgba(0,0,0,.4);min-width:200px;max-width:340px;opacity:0;transform:translateX(100px);transition:opacity .25s,transform .25s}
+.toast.show{opacity:1;transform:none}
+.toast-icon{width:22px;height:22px;border-radius:50%;display:grid;place-items:center;font-size:12px;font-weight:900;flex-shrink:0}
+.toast.success{border-color:rgba(34,197,94,.4)}
+.toast.success .toast-icon{background:rgba(34,197,94,.2);color:#22c55e}
+.toast.error{border-color:rgba(239,68,68,.4)}
+.toast.error .toast-icon{background:rgba(239,68,68,.2);color:#ef4444}
+.toast.info{border-color:var(--accent-glow)}
+.toast.info .toast-icon{background:var(--accent-glow);color:var(--accent)}
+@media(max-width:560px){
+  .topbar{flex-direction:column;align-items:flex-start;gap:10px;padding:12px 16px}
+  .user-area{width:100%;justify-content:space-between}
+  .hero-stats{gap:26px}
+  main{padding:16px}
+  .profile-header{padding:20px}
+  .coin-big{font-size:36px}
+}
 </style>
 </head>
-<body>
+<body data-theme="default">
 
-<!-- ============ LOGIN OVERLAY ============ -->
-<div class="login-overlay" id="loginOverlay">
-  <div class="login-card">
-    <div class="login-logo">LUIPAGE 5D</div>
-    <p class="login-sub">Coleccioná Luicards, tradeá y escalá en el ranking global.</p>
+<div id="loading" class="center-screen muted">Cargando LuiPage5D…</div>
 
-    <button class="login-btn google" id="loginGoogle">
-      <svg width="20" height="20" viewBox="0 0 48 48" style="margin-right:2px">
-        <path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.9 29.3 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.9 1.2 8 3.1l5.7-5.7C34 6.1 29.3 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20c11 0 20-8.9 20-20 0-1.3-.1-2.4-.4-3.5z"/>
-        <path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 16 19 13 24 13c3.1 0 5.9 1.2 8 3.1l5.7-5.7C34 6.1 29.3 4 24 4 16.3 4 9.7 8.4 6.3 14.7z"/>
-        <path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 35.1 26.7 36 24 36c-5.3 0-9.7-3.1-11.3-8l-6.5 5C9.6 39.6 16.3 44 24 44z"/>
-        <path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.3-2.2 4.2-4 5.6l6.2 5.2C36.9 39.2 44 34 44 24c0-1.3-.1-2.4-.4-3.5z"/>
-      </svg>
-      Continuar con Google
-    </button>
-
-    <div class="login-divider"><span>O USÁ TU CORREO</span></div>
-
-    <form class="login-form" id="emailForm">
-      <input type="email" id="loginEmail" placeholder="tucorreo@ejemplo.com" required>
-      <input type="password" id="loginPassword" placeholder="Contraseña (mín. 6 caracteres)" required>
-      <button type="submit" class="login-btn primary">🔑 Iniciar sesión</button>
-      <button type="button" class="login-btn secondary" id="registerEmailBtn">🆕 Crear cuenta nueva</button>
-    </form>
-
-    <p class="login-note">Si es tu primera vez, creá una cuenta nueva. Tu progreso se guardará en la nube.</p>
-    <p class="login-error" id="loginError"></p>
+<div id="authScreen" class="center-screen hidden">
+  <div class="auth-card">
+    <div class="brand">LuiPage5D</div>
+    <p class="muted small-text" style="text-align:center">Inicia sesión o crea tu cuenta</p>
+    <input id="authEmail" type="email" placeholder="Correo" autocomplete="email" />
+    <input id="authPass" type="password" placeholder="Contraseña" autocomplete="current-password" />
+    <input id="authName" type="text" placeholder="Nombre de usuario (solo al registrarte)" />
+    <button id="btnLogin" class="btn primary">Entrar</button>
+    <button id="btnRegister" class="btn">Crear cuenta</button>
+    <div class="divider"><span>o</span></div>
+    <button id="btnGoogle" class="btn google">Continuar con Google</button>
+    <p id="authMsg" class="msg"></p>
   </div>
 </div>
 
-<!-- ============ HEADER ============ -->
-<header>
-  <div class="header-inner">
-    <div class="logo" id="logo">LUIPAGE <span class="five">5D</span></div>
-    <div class="header-actions">
-      <div class="coins-pill" id="coinPill">🪙 <span id="coinCount">0</span> <small>LuiCoins</small></div>
-      <div class="user-menu">
-        <div class="user-menu-trigger" id="userMenuTrigger">😎</div>
-        <div class="user-menu-dropdown" id="userMenuDropdown">
-          <button data-action="profile">👤 Mi Perfil</button>
-          <button data-action="admin" id="adminMenuBtn" class="hide">🛠️ Panel Admin</button>
-          <hr>
-          <button data-action="logout">🚪 Cerrar sesión</button>
-        </div>
+<div id="appScreen" class="hidden">
+  <header class="topbar">
+    <div class="brand small">LuiPage5D</div>
+    <div class="user-area">
+      <span id="coinDisplay" class="coin-pill">🪙 0</span>
+      <div class="avatar" id="topAvatar" title="Ver perfil">
+        <img id="topAvatarImg" alt="" />
+        <span class="initial" id="topAvatarInitial">L</span>
       </div>
+      <span id="userName" class="uname"></span>
+      <button id="btnLogout" class="btn small ghost">Salir</button>
     </div>
-  </div>
-</header>
+  </header>
 
-<div class="tabs-wrapper">
   <nav class="tabs">
-    <button class="tab active" data-tab="inicio">🏠 Inicio</button>
-    <button class="tab" data-tab="tienda">🛒 Tienda</button>
-    <button class="tab" data-tab="cartas">🃏 Luicards</button>
-    <button class="tab" data-tab="top">🏆 Top Global</button>
-    <button class="tab" data-tab="perfil">👤 Mi Perfil</button>
-    <button class="tab" data-tab="nose">🤷 Nose</button>
+    <button class="tab active" data-tab="home">🏠 Inicio</button>
+    <button class="tab" data-tab="shop">🛒 Tienda</button>
+    <button class="tab" data-tab="leaderboard">🏆 Leaderboard</button>
+    <button class="tab" data-tab="cards">🃏 Mis LuiCards</button>
+    <button class="tab" data-tab="profile">🎨 Perfil</button>
+    <button class="tab hidden" data-tab="admin" id="adminTab">🛠️ Admin</button>
   </nav>
-</div>
 
-<main>
-  <!-- INICIO -->
-  <section id="inicio" class="panel active">
-    <h2>Bienvenido a LUIPAGE 5D</h2>
-    <p class="sub">Tu centro de coleccionismo de fulbo. Comprá Luicards, items, intercambiá con otros jugadores y escalá en el Top Global.</p>
-    <div style="display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(160px,1fr))">
-      <div class="rank" style="flex-direction:column;align-items:flex-start;padding:16px">
-        <span style="font-size:1.8rem">🃏</span>
-        <b style="font-size:1rem;margin-top:8px">Luicards</b>
-        <small style="color:var(--muted);font-size:.8rem;margin-top:4px">Cartas de jugadores reales de fulbo.</small>
-      </div>
-      <div class="rank" style="flex-direction:column;align-items:flex-start;padding:16px">
-        <span style="font-size:1.8rem">🛒</span>
-        <b style="font-size:1rem;margin-top:8px">Tienda general</b>
-        <small style="color:var(--muted);font-size:.8rem;margin-top:4px">Items, boosters y cosas raras de la 5D.</small>
-      </div>
-      <div class="rank" style="flex-direction:column;align-items:flex-start;padding:16px">
-        <span style="font-size:1.8rem">🔄</span>
-        <b style="font-size:1rem;margin-top:8px">Trades</b>
-        <small style="color:var(--muted);font-size:.8rem;margin-top:4px">Intercambiá cartas con otros jugadores.</small>
-      </div>
-      <div class="rank" style="flex-direction:column;align-items:flex-start;padding:16px">
-        <span style="font-size:1.8rem">🏆</span>
-        <b style="font-size:1rem;margin-top:8px">Top Global</b>
-        <small style="color:var(--muted);font-size:.8rem;margin-top:4px">Ranking en tiempo real de todos los jugadores.</small>
-      </div>
-    </div>
-    <div style="margin-top:24px;padding:20px;border-radius:18px;background:var(--panel);border:1px solid var(--stroke)">
-      <h3 style="font-size:1rem;margin-bottom:8px">📢 ¿Cómo ganar LuiCoins?</h3>
-      <p style="color:var(--muted);font-size:.86rem;line-height:1.6">
-        Los LuiCoins te los otorga el admin de la 5D. Si sos nuevo, pedile al admin que te cargue saldo para empezar a comprar.
-        Mientras tanto, podés tradear cartas con otros jugadores para hacer crecer tu colección.
-      </p>
-    </div>
-  </section>
-
-  <!-- TIENDA GENERAL -->
-  <section id="tienda" class="panel">
-    <h2>Tienda</h2>
-    <p class="sub">Items, boosters y otras cosas raras de la 5D. Editables por admins.</p>
-    <div class="items-grid" id="itemsGrid"></div>
-  </section>
-
-  <!-- LUICARDS -->
-  <section id="cartas" class="panel">
-    <h2>Luicards</h2>
-    <p class="sub">Cartas de fulbo de la vida real. Compralas con tus LuiCoins y tradeá con otros jugadores.</p>
-    <div class="cards-grid" id="cardsGrid"></div>
-  </section>
-
-  <!-- TOP -->
-  <section id="top" class="panel">
-    <h2>Top Global</h2>
-    <p class="sub">Ranking mundial de LuiCoins. Actualizado en tiempo real desde Firestore.</p>
-    <div class="top-list" id="topList"><p style="color:var(--muted)">Cargando ranking...</p></div>
-  </section>
-
-  <!-- PERFIL -->
-  <section id="perfil" class="panel">
-    <h2>Mi Perfil</h2>
-    <p class="sub">Personalizá cómo te ven los demás jugadores.</p>
-
-    <div class="profile-card" id="profileCard">
-      <div class="profile-banner" id="profileBanner">
-        <label class="edit-image-btn" for="bannerUpload">📷 Cambiar Banner</label>
-      </div>
-      <div class="profile-info">
-        <div class="profile-avatar-big" id="profileAvatarBig">
-          <label class="edit-avatar-btn" for="avatarUpload">📷</label>
-        </div>
-        <div class="profile-name-big" id="profileNameBig">LuiFan <span class="admin-badge" id="profileAdminBadge" style="display:none">ADMIN</span></div>
-        <div class="profile-bio-big" id="profileBioBig">El crack de la 5D</div>
-        <div class="profile-stats">
-          <div class="profile-stat">🪙 <span id="profileCoinsBig">0</span></div>
-          <div class="profile-stat">🃏 <span id="profileCardsCount">0</span> cartas</div>
-          <div class="profile-stat">🛒 <span id="profileItemsCount">0</span> items</div>
+  <main>
+    <section id="tab-home" class="tab-panel">
+      <div class="hero">
+        <h2>¡Bienvenido, <span id="homeName">…</span>!</h2>
+        <div class="coin-big">🪙 <span id="homeCoins">0</span> <small>LuiCoins</small></div>
+        <div class="hero-stats">
+          <div class="stat"><span id="homeCardCount">0</span><label>LuiCards</label></div>
+          <div class="stat"><span id="homeRank">—</span><label>Posición</label></div>
+          <div class="stat"><span id="homeMember">—</span><label>Miembro</label></div>
         </div>
       </div>
-    </div>
+      <h3 class="section-title">Tus últimas LuiCards</h3>
+      <div id="homeCards" class="cards-grid"></div>
+      <div id="homeNoCards" class="empty hidden">🃏<p>Todavía no tienes LuiCards.</p></div>
+    </section>
 
-    <h3 style="margin:22px 0 12px;font-size:1rem;color:var(--muted)">EDITAR PERFIL</h3>
-    <div class="profile-form">
-      <input type="file" id="avatarUpload" accept="image/*" style="display:none">
-      <input type="file" id="bannerUpload" accept="image/*" style="display:none">
+    <!-- === TIENDA === -->
+    <section id="tab-shop" class="tab-panel hidden">
+      <div class="row-between">
+        <div>
+          <h2>🛒 Tienda de LuiCards</h2>
+          <p class="muted small-text">Tienes <b style="color:var(--gold)">🪙 <span id="shopCoins">0</span></b> LuiCoins</p>
+        </div>
+        <button id="btnRefreshShop" class="btn small ghost">🔄 Actualizar</button>
+      </div>
+      <div id="shopGrid" class="cards-grid" style="margin-top:16px">
+        <div class="skeleton skeleton-card"></div>
+        <div class="skeleton skeleton-card"></div>
+        <div class="skeleton skeleton-card"></div>
+      </div>
+    </section>
 
-      <label>Nombre
-        <input id="editName" maxlength="18">
-      </label>
-      <label>Bio corta
-        <input id="editBio" maxlength="60" placeholder="Una frase...">
-      </label>
-      
-      <div class="full" style="margin-top:10px;">
-        <label style="margin-bottom:6px">Color de acento</label>
-        <input type="color" id="editColor" style="width:100%;max-width:100px;">
+    <section id="tab-leaderboard" class="tab-panel hidden">
+      <div class="row-between">
+        <h2>🏆 Leaderboard</h2>
+        <button id="btnRefreshLb" class="btn small ghost">🔄 Actualizar</button>
+      </div>
+      <p class="muted small-text">Top jugadores por LuiCoins</p>
+      <ol id="leaderboardList" class="leaderboard"></ol>
+    </section>
+
+    <section id="tab-cards" class="tab-panel hidden">
+      <h2>🃏 Mis LuiCards</h2>
+      <p class="muted small-text">Las cartas te las entrega un administrador o las compras en la tienda.</p>
+      <div id="myCards" class="cards-grid"></div>
+      <div id="noCards" class="empty hidden">🃏<p>Aún no tienes LuiCards.</p></div>
+    </section>
+
+    <section id="tab-profile" class="tab-panel hidden">
+      <div class="profile-header">
+        <div class="avatar lg" id="profileAvatar">
+          <img id="profileAvatarImg" alt="" />
+          <span class="initial" id="profileAvatarInitial">L</span>
+        </div>
+        <div class="profile-info">
+          <h2 id="profileName">—</h2>
+          <p class="bio muted" id="profileBio">Sin bio todavía</p>
+          <div class="profile-stats">
+            <span>🪙 <b id="profileCoins">0</b></span>
+            <span>🃏 <b id="profileCards">0</b></span>
+            <span>🏆 <b id="profileRank">—</b></span>
+          </div>
+        </div>
       </div>
 
-      <div class="full">
-        <label style="margin-bottom:6px">Si no querés foto, elegí un avatar (Emoji)</label>
-        <div class="emoji-picker" id="emojiPicker"></div>
+      <div class="admin-grid" style="margin-top:20px">
+        <div class="panel">
+          <h3>✏️ Identidad</h3>
+          <label>Nombre de usuario</label>
+          <input id="editName" maxlength="30" />
+          <label>Avatar (URL de imagen)</label>
+          <input id="editAvatar" type="url" placeholder="https://ejemplo.com/foto.png" />
+          <label>Bio / Estado</label>
+          <input id="editBio" maxlength="80" placeholder="Una frase corta sobre ti" />
+          <button id="btnSaveProfile" class="btn primary" style="margin-top:14px;width:100%">Guardar cambios</button>
+          <p id="profileMsg" class="msg"></p>
+        </div>
+        <div class="panel">
+          <h3>🎨 Tema</h3>
+          <p class="muted small-text">Elige tu color favorito. Se guarda automáticamente.</p>
+          <div class="theme-grid" id="themeGrid"></div>
+        </div>
       </div>
+    </section>
 
-      <div class="full">
-        <label style="margin-bottom:6px">Si no querés foto, elegí un banner (Gradiente)</label>
-        <div class="banner-presets" id="bannerPresets"></div>
-      </div>
-      
-      <div class="full" style="margin-top: 15px;">
-        <button class="dir" id="saveProfile" style="width:100%;">💾 Guardar todos los cambios</button>
-      </div>
-    </div>
-
-    <h3 style="margin:26px 0 12px;font-size:1rem;color:var(--muted)">MI COLECCIÓN DE LUICARDS</h3>
-    <div class="collection-grid" id="collectionGrid"></div>
-
-    <h3 style="margin:26px 0 12px;font-size:1rem;color:var(--muted)">MIS ITEMS DE TIENDA</h3>
-    <div class="collection-grid" id="inventoryGrid"></div>
-
-    <h3 style="margin:26px 0 12px;font-size:1rem;color:var(--muted)">CUENTA</h3>
-    <button class="danger-btn" id="logoutBtn">🚪 Cerrar sesión</button>
-  </section>
-
-  <!-- NOSE -->
-  <section id="nose" class="panel">
-    <h2>Nose</h2>
-    <p class="sub">Sección misteriosa sin propósito conocido.</p>
-    <div class="nose-box">
-      <div class="nose-emoji">🤷‍♂️</div>
-      <button class="dir" id="noseBtn" style="max-width:260px;margin:0 auto">No sé</button>
-      <div class="nose-answer" id="noseAnswer"></div>
-    </div>
-  </section>
-</main>
-
-<footer>LUIPAGE 5D · hecho con 🧡 para Lui · los LuiCoins no valen nada, igual que el peso</footer>
-
-<!-- ============ TRADE MODAL ============ -->
-<div class="modal-backdrop" id="tradeModal">
-  <div class="modal" style="max-width:480px">
-    <h3>🔄 Trade de Luicards</h3>
-    <p>Elegí qué das y qué querés recibir.</p>
-    <div style="margin-bottom:14px">
-      <label style="display:block;font-size:.82rem;font-weight:700;color:var(--muted);margin-bottom:6px">Tu carta a ofrecer</label>
-      <select id="tradeMyCard"></select>
-    </div>
-    <div style="margin-bottom:14px">
-      <label style="display:block;font-size:.82rem;font-weight:700;color:var(--muted);margin-bottom:6px">Jugador destino</label>
-      <select id="tradeTargetPlayer"></select>
-    </div>
-    <div style="margin-bottom:14px">
-      <label style="display:block;font-size:.82rem;font-weight:700;color:var(--muted);margin-bottom:6px">Carta que querés recibir</label>
-      <select id="tradeTargetCard"></select>
-    </div>
-    <div class="modal-actions">
-      <button class="ghost" id="tradeCancel">Cancelar</button>
-      <button class="dir" id="tradeConfirm">🔄 Tradear</button>
-    </div>
-  </div>
-</div>
-
-<!-- ============ ADMIN PANEL ============ -->
-<div class="modal-backdrop" id="adminPanelModal">
-  <div class="admin-panel">
-    <div class="admin-header">
+    <!-- === ADMIN === -->
+    <section id="tab-admin" class="tab-panel hidden">
       <h2>🛠️ Panel de Admin</h2>
-      <button class="admin-btn" id="adminClose">✕ Cerrar</button>
-    </div>
-    <div class="admin-tabs-wrapper">
-      <div class="admin-tabs">
-        <button class="admin-tab active" data-atab="players">👥 Jugadores</button>
-        <button class="admin-tab" data-atab="shopcards">🃏 Luicards</button>
-        <button class="admin-tab" data-atab="shopitems">🛒 Tienda</button>
-        <button class="admin-tab" data-atab="settings">⚙️ Ajustes</button>
-      </div>
-    </div>
-    <div class="admin-body">
-      <div id="adminPlayers" class="admin-section active">
-        <h4>Agregar jugador</h4>
-        <div class="admin-form">
-          <input id="newPlayerName" placeholder="Nombre">
-          <input id="newPlayerCoins" type="number" placeholder="LuiCoins" value="100">
-          <input id="newPlayerAvatar" placeholder="😎" maxlength="4">
-          <button class="admin-btn primary" id="addPlayerBtn">➕ Agregar</button>
+
+      <div class="admin-grid">
+        <div class="panel">
+          <h3>💰 Dar / Quitar LuiCoins</h3>
+          <label>Usuario</label>
+          <select id="coinUserSelect"></select>
+          <label>Cantidad</label>
+          <input id="coinAmount" type="number" min="1" value="100" />
+          <div class="row">
+            <button id="btnGiveCoins" class="btn primary" style="flex:1">➕ Dar</button>
+            <button id="btnTakeCoins" class="btn danger" style="flex:1">➖ Quitar</button>
+          </div>
         </div>
-        <h4>Jugadores registrados</h4>
-        <div id="adminPlayersList"></div>
-      </div>
-      <div id="adminShopcards" class="admin-section">
-        <h4>Agregar Luicard</h4>
-        <div class="admin-form">
-          <input id="newCardEmoji" placeholder="🐐" maxlength="4">
-          <input id="newCardName" placeholder="Nombre">
-          <input id="newCardClub" placeholder="Club">
-          <input id="newCardPos" placeholder="DEL" maxlength="3">
-          <input id="newCardRating" type="number" placeholder="99" min="1" max="99">
-          <input id="newCardPrice" type="number" placeholder="500" min="1">
-          <input type="color" id="newCardC1" value="#8ee7ff">
-          <input type="color" id="newCardC2" value="#ffb3d9">
-          <button class="admin-btn primary" id="addCardBtn">➕ Agregar</button>
+
+        <div class="panel">
+          <h3 id="adminShopFormTitle">🛒 Publicar LuiCard en tienda</h3>
+          <label>Nombre</label>
+          <input id="shopName" placeholder="Ej: Lui Dorada" />
+          <label>Rareza</label>
+          <select id="shopRarity">
+            <option value="common">Común</option>
+            <option value="rare">Rara</option>
+            <option value="epic">Épica</option>
+            <option value="legendary">Legendaria</option>
+            <option value="mythic">Mítica</option>
+          </select>
+          <label>Imagen (sube archivo o pega URL)</label>
+          <div class="upload-row">
+            <input id="shopImageUrl" type="url" placeholder="https://..." />
+            <button type="button" class="btn" id="btnShopUpload">📁</button>
+            <input type="file" id="shopImageFile" accept="image/*" hidden />
+          </div>
+          <p id="shopImageStatus" class="small-text muted" style="margin-top:6px">JPG, PNG, GIF, WebP · máx 2MB</p>
+          <div id="shopImagePreview" class="image-preview"></div>
+          <label>Descripción</label>
+          <textarea id="shopDesc" rows="2" placeholder="Descripción corta"></textarea>
+          <div style="display:flex;gap:8px;margin-top:8px">
+            <div style="flex:1">
+              <label>Precio (🪙)</label>
+              <input id="shopPrice" type="number" min="1" value="100" />
+            </div>
+            <div style="flex:1">
+              <label>Stock (-1 = ∞)</label>
+              <input id="shopStock" type="number" min="-1" value="-1" />
+            </div>
+          </div>
+          <button id="btnPublishShop" class="btn primary" style="width:100%;margin-top:12px">🛒 Publicar en tienda</button>
+          <button id="btnCancelEdit" class="btn ghost hidden" style="width:100%;margin-top:6px">Cancelar edición</button>
         </div>
-        <h4>Luicards en tienda</h4>
-        <div id="adminCardsList"></div>
-      </div>
-      <div id="adminShopitems" class="admin-section">
-        <h4>Agregar item a la tienda general</h4>
-        <div class="admin-form">
-          <input id="newItemEmoji" placeholder="🎁" maxlength="4">
-          <input id="newItemName" placeholder="Nombre">
-          <input id="newItemDesc" placeholder="Descripción">
-          <input id="newItemCat" placeholder="Categoría">
-          <input id="newItemPrice" type="number" placeholder="100" min="1">
-          <input type="color" id="newItemC1" value="#ffe98a">
-          <input type="color" id="newItemC2" value="#ffb3b3">
-          <button class="admin-btn primary" id="addItemBtn">➕ Agregar</button>
-        </div>
-        <h4>Items en tienda general</h4>
-        <div id="adminItemsList"></div>
-      </div>
-      <div id="adminSettings" class="admin-section">
-        <h4>Información</h4>
-        <div class="rules-help">
-          <b>🔐 Sobre los admins</b><br>
-          Los admins se marcan con el flag <code>isAdmin: true</code> en su documento de la colección <code>users</code>.
-          Desde este panel podés promover/degradar jugadores (con el botón ⚡).<br><br>
-          <b>⚠️ Primer admin:</b> si nadie es admin todavía, entrá a
-          <b>Firebase Console → Firestore → users → (tu documento)</b> y agregá manualmente
-          el campo <code>isAdmin</code> (tipo boolean) con valor <code>true</code>. Después recargá la página.
-        </div>
-        <h4>Reglas de Firestore (modo dev)</h4>
-        <div class="rules-help">
-          <b>⚠️ Las reglas actuales de tu Firestore deben permitir leer/escribir a usuarios autenticados.</b>
-          Copiá y pegá esto en <b>Firebase Console → Firestore → Reglas</b>:
-          <pre>rules_version = '2';
-service cloud.firestore {
-  match /databases/{database}/documents {
-    function signedIn() { return request.auth != null; }
-    match /users/{uid} {
-      allow read: if signedIn();
-      allow create: if signedIn() && request.auth.uid == uid;
-      allow update: if signedIn();
-      allow delete: if signedIn();
-    }
-    match /shopCards/{id} {
-      allow read: if signedIn();
-      allow write: if signedIn();
-    }
-    match /shopItems/{id} {
-      allow read: if signedIn();
-      allow write: if signedIn();
-    }
-  }
-}</pre>
+
+        <div class="panel">
+          <h3>🎁 Dar LuiCard directamente</h3>
+          <label>Asignar a</label>
+          <select id="cardUserSelect"></select>
+          <label>Nombre</label>
+          <input id="cardName" type="text" placeholder="Ej: Lui Legendaria" />
+          <label>Rareza</label>
+          <select id="cardRarity">
+            <option value="common">Común</option>
+            <option value="rare">Rara</option>
+            <option value="epic">Épica</option>
+            <option value="legendary">Legendaria</option>
+            <option value="mythic">Mítica</option>
+          </select>
+          <label>Imagen (sube archivo o pega URL)</label>
+          <div class="upload-row">
+            <input id="giveImageUrl" type="url" placeholder="https://..." />
+            <button type="button" class="btn" id="btnGiveUpload">📁</button>
+            <input type="file" id="giveImageFile" accept="image/*" hidden />
+          </div>
+          <p id="giveImageStatus" class="small-text muted" style="margin-top:6px">JPG, PNG, GIF, WebP · máx 2MB</p>
+          <div id="giveImagePreview" class="image-preview"></div>
+          <label>Descripción (opcional)</label>
+          <textarea id="cardDesc" rows="2"></textarea>
+          <button id="btnCreateCard" class="btn primary" style="margin-top:12px;width:100%">Crear y asignar</button>
         </div>
       </div>
-    </div>
-  </div>
+
+      <h3 class="section-title">🛒 Cartas actualmente en la tienda</h3>
+      <div id="adminShopList" class="cards-grid"></div>
+
+      <h3 class="section-title">🃏 Todas las LuiCards de usuarios</h3>
+      <div id="allCards" class="cards-grid"></div>
+    </section>
+  </main>
 </div>
 
-<div class="toast" id="toast"></div>
+<div id="toasts"></div>
+
+<div id="modal" class="modal hidden">
+  <div class="modal-backdrop" id="modalBackdrop"></div>
+  <div class="modal-content" id="modalContent"></div>
+</div>
 
 <script type="module">
-/* =========================================================
-   FIREBASE
-========================================================= */
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import {
-  initializeFirestore, persistentLocalCache, persistentMultipleTabManager,
-  collection, doc, getDoc, getDocs, setDoc, updateDoc, deleteDoc,
-  onSnapshot, runTransaction, serverTimestamp
-} from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
+  getAuth, onAuthStateChanged, createUserWithEmailAndPassword,
+  signInWithEmailAndPassword, signOut, updateProfile,
+  GoogleAuthProvider, signInWithPopup
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 import {
-  getAuth, GoogleAuthProvider, signInWithPopup, 
-  createUserWithEmailAndPassword, signInWithEmailAndPassword,
-  onAuthStateChanged, signOut, updateProfile
-} from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
+  getFirestore, doc, getDoc, setDoc, updateDoc, collection, addDoc,
+  query, where, orderBy, limit, getDocs, onSnapshot, deleteDoc,
+  increment, serverTimestamp, runTransaction
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import {
+  getStorage, ref as sRef, uploadBytes, getDownloadURL, deleteObject
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
 
+/* ========== CONFIG ========== */
 const firebaseConfig = {
   apiKey: "AIzaSyA5bkc6qYbk_EhKbsF6wuL-EF5sNDjNlr4",
   authDomain: "lui5d-99cd3.firebaseapp.com",
@@ -687,1018 +518,799 @@ const firebaseConfig = {
   measurementId: "G-L5SYNRX3L3"
 };
 
+const ADMIN_EMAILS = []; // 👈 Déjalo vacío, el admin se activa con isAdmin:true en Firestore
+
+const RARITIES = {
+  common:    { label: "Común",      cls: "r-common" },
+  rare:      { label: "Rara",       cls: "r-rare" },
+  epic:      { label: "Épica",      cls: "r-epic" },
+  legendary: { label: "Legendaria", cls: "r-legendary" },
+  mythic:    { label: "Mítica",     cls: "r-mythic" },
+};
+
+const THEMES = {
+  default:   { name: "Púrpura",   emoji: "🟣", colors: ["#a855f7", "#7c3aed"] },
+  cyber:     { name: "Cyan",      emoji: "🔵", colors: ["#06b6d4", "#0891b2"] },
+  crimson:   { name: "Carmesí",   emoji: "🔴", colors: ["#ef4444", "#b91c1c"] },
+  emerald:   { name: "Esmeralda", emoji: "🟢", colors: ["#10b981", "#059669"] },
+  gold:      { name: "Oro",       emoji: "🟡", colors: ["#f59e0b", "#d97706"] },
+  synthwave: { name: "Synthwave", emoji: "🌸", colors: ["#ec4899", "#db2777"] },
+  light:     { name: "Claro",     emoji: "⚪", colors: ["#a855f7", "#7c3aed"] },
+};
+
 const app = initializeApp(firebaseConfig);
-const db = initializeFirestore(app, {
-  localCache: persistentLocalCache({ tabManager: persistentMultipleTabManager() })
-});
 const auth = getAuth(app);
+const db = getFirestore(app);
+const storage = getStorage(app);
 
-/* =========================================================
-   HELPERS
-========================================================= */
-const $ = id => document.getElementById(id);
-let toastTimer;
-function toast(msg){
-  const t = $('toast'); t.textContent = msg; t.classList.add('show');
-  clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => t.classList.remove('show'), 2600);
+let currentUser = null;
+let profile = null;
+let isAdmin = false;
+let allUsersCache = [];
+let shopItemsCache = [];
+let unsubProfile = null;
+let unsubShop = null;
+let lastCoins = 0;
+let lastRank = null;
+let editingShopId = null;
+
+/* ========== HELPERS ========== */
+const $ = (id) => document.getElementById(id);
+const esc = (s) => String(s ?? "").replace(/[&<>"']/g, c =>
+  ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[c]));
+const fmt = (n) => Number(n || 0).toLocaleString("es-ES");
+const byCreatedDesc = (a, b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0);
+
+function authError(e) {
+  const map = {
+    "auth/invalid-email": "Correo inválido.",
+    "auth/user-not-found": "No existe una cuenta con ese correo.",
+    "auth/wrong-password": "Contraseña incorrecta.",
+    "auth/invalid-credential": "Correo o contraseña incorrectos.",
+    "auth/email-already-in-use": "Ese correo ya está registrado.",
+    "auth/weak-password": "La contraseña debe tener al menos 6 caracteres.",
+    "auth/popup-closed-by-user": "Cerraste la ventana de Google.",
+    "auth/too-many-requests": "Demasiados intentos. Espera un momento.",
+  };
+  return map[e.code] || e.message;
 }
-function escapeHtml(s){
-  return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+function toast(msg, type = "success") {
+  const container = $("toasts");
+  const el = document.createElement("div");
+  el.className = "toast " + type;
+  const icons = { success: "✓", error: "✕", info: "ℹ" };
+  el.innerHTML = `<span class="toast-icon">${icons[type] || "ℹ"}</span><span>${esc(msg)}</span>`;
+  container.appendChild(el);
+  requestAnimationFrame(() => el.classList.add("show"));
+  setTimeout(() => {
+    el.classList.remove("show");
+    setTimeout(() => el.remove(), 300);
+  }, 3500);
 }
-function uid(){ return 'u_' + Math.random().toString(36).slice(2,9); }
 
-/* =========================================================
-   ESTADO
-========================================================= */
-let authUser = null;
-let userData = null;
-let allUsers = [];
-let shopCards = [];
-let shopItems = [];
-let cardsMap = {};
-let itemsMap = {};
-let listeners = [];
+function animateNumber(el, from, to, duration = 600) {
+  if (from === to) { el.textContent = fmt(to); return; }
+  const start = performance.now();
+  function frame(now) {
+    const t = Math.min(1, (now - start) / duration);
+    const eased = 1 - Math.pow(1 - t, 3);
+    el.textContent = fmt(Math.round(from + (to - from) * eased));
+    if (t < 1) requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+}
 
-/* =========================================================
-   AUTH
-========================================================= */
-async function ensureUserDoc(user, customName){
-  const ref = doc(db, 'users', user.uid);
-  const snap = await getDoc(ref);
-  if(!snap.exists()){
-    const isGoogle = user.providerData.some(p => p.providerId === 'google.com');
-    await setDoc(ref, {
-      uid: user.uid,
-      email: user.email || null,
-      name: customName || user.displayName || (user.email ? user.email.split('@')[0] : 'Jugador'),
-      bio: 'Nuevo en la 5D',
-      avatar: '😎',
-      color: '#b14aed',
-      banner: 'linear-gradient(135deg,#b14aed,#00e5ff)',
-      coins: 100,
-      owned: [],
-      inventory: [],
-      isAdmin: false,
-      provider: isGoogle ? 'google' : 'email',
-      createdAt: serverTimestamp(),
-      lastLogin: serverTimestamp()
-    });
+function applyTheme(themeKey, persist = true) {
+  if (!THEMES[themeKey]) themeKey = "default";
+  document.body.dataset.theme = themeKey;
+  if (persist) localStorage.setItem("lui-theme", themeKey);
+  document.querySelectorAll(".theme-swatch").forEach(b =>
+    b.classList.toggle("active", b.dataset.theme === themeKey));
+}
+applyTheme(localStorage.getItem("lui-theme") || "default", false);
+
+function renderAvatar(el, url, name) {
+  const img = el.querySelector("img");
+  const initial = el.querySelector(".initial");
+  if (url) {
+    img.src = url;
+    el.classList.add("has-img");
   } else {
-    try{ await updateDoc(ref, { lastLogin: serverTimestamp() }); }catch(e){}
+    el.classList.remove("has-img");
+    img.removeAttribute("src");
+    initial.textContent = (name || "?").charAt(0).toUpperCase();
   }
 }
 
-$('loginGoogle').addEventListener('click', async () => {
-  $('loginError').textContent = '';
-  try{
-    const provider = new GoogleAuthProvider();
-    await signInWithPopup(auth, provider);
-  }catch(e){
-    console.error(e);
-    $('loginError').textContent = 'No se pudo iniciar con Google: ' + (e.message || e.code);
-  }
+/* ========== AUTH ========== */
+const authMsg = $("authMsg");
+
+$("btnLogin").addEventListener("click", async () => {
+  authMsg.textContent = "";
+  const email = $("authEmail").value.trim();
+  const pass = $("authPass").value;
+  if (!email || !pass) { authMsg.textContent = "Completa correo y contraseña."; return; }
+  try { await signInWithEmailAndPassword(auth, email, pass); }
+  catch (e) { authMsg.textContent = authError(e); }
 });
 
-$('emailForm').addEventListener('submit', async (e) => {
-  e.preventDefault();
-  $('loginError').textContent = '';
-  const email = $('loginEmail').value.trim();
-  const pass = $('loginPassword').value;
-  
-  if(pass.length < 6){ 
-    $('loginError').textContent = 'La contraseña debe tener al menos 6 caracteres'; 
-    return; 
-  }
-
-  try{
-    await signInWithEmailAndPassword(auth, email, pass);
-  }catch(e){
-    console.error(e);
-    if(e.code === 'auth/wrong-password' || e.code === 'auth/user-not-found' || e.code === 'auth/invalid-credential'){
-      $('loginError').textContent = 'Correo o contraseña incorrectos.';
-    } else {
-      $('loginError').textContent = 'Error: ' + e.message;
-    }
-  }
-});
-
-$('registerEmailBtn').addEventListener('click', async () => {
-  $('loginError').textContent = '';
-  const email = $('loginEmail').value.trim();
-  const pass = $('loginPassword').value;
-
-  if(!email || pass.length < 6){ 
-    $('loginError').textContent = 'Completá un correo válido y una contraseña de al menos 6 caracteres'; 
-    return; 
-  }
-
-  try{
+$("btnRegister").addEventListener("click", async () => {
+  authMsg.textContent = "";
+  const email = $("authEmail").value.trim();
+  const pass = $("authPass").value;
+  const name = $("authName").value.trim();
+  if (!email || !pass) { authMsg.textContent = "Completa correo y contraseña."; return; }
+  try {
     const cred = await createUserWithEmailAndPassword(auth, email, pass);
-    const defaultName = email.split('@')[0].slice(0, 18);
-    await updateProfile(cred.user, { displayName: defaultName });
-  }catch(e){
-    console.error(e);
-    if(e.code === 'auth/email-already-in-use'){
-      $('loginError').textContent = 'Ese correo ya está registrado. Probá iniciar sesión.';
-    } else if(e.code === 'auth/weak-password'){
-      $('loginError').textContent = 'La contraseña es muy débil (mínimo 6 caracteres).';
-    } else {
-      $('loginError').textContent = 'Error al crear cuenta: ' + e.message;
+    const dn = name || email.split("@")[0];
+    await updateProfile(cred.user, { displayName: dn });
+    const ref = doc(db, "users", cred.user.uid);
+    const snap = await getDoc(ref);
+    if (!snap.exists()) {
+      await setDoc(ref, {
+        email: cred.user.email, displayName: dn, coins: 0,
+        avatarUrl: "", bio: "", theme: "default",
+        createdAt: serverTimestamp()
+      });
     }
-  }
+  } catch (e) { authMsg.textContent = authError(e); }
 });
 
-async function doLogout(){
-  if(!confirm('¿Cerrar sesión?')) return;
-  cleanupListeners();
-  await signOut(auth);
-}
+$("btnGoogle").addEventListener("click", async () => {
+  authMsg.textContent = "";
+  try { await signInWithPopup(auth, new GoogleAuthProvider()); }
+  catch (e) { authMsg.textContent = authError(e); }
+});
 
-/* =========================================================
-   LISTENERS
-========================================================= */
-function cleanupListeners(){
-  listeners.forEach(u => { try{ u(); }catch(e){} });
-  listeners = [];
-  allUsers = []; shopCards = []; shopItems = []; cardsMap = {}; itemsMap = {};
-}
+$("btnLogout").addEventListener("click", () => signOut(auth));
 
-function startListeners(){
-  cleanupListeners();
-  listeners.push(onSnapshot(collection(db, 'users'), snap => {
-    allUsers = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-    userData = allUsers.find(u => u.id === authUser.uid) || null;
-    renderAll();
-    updateAdminUI();
-  }));
-  listeners.push(onSnapshot(collection(db, 'shopCards'), snap => {
-    shopCards = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-    cardsMap = Object.fromEntries(shopCards.map(c => [c.id, c]));
-    renderCards(); renderCollection();
-  }));
-  listeners.push(onSnapshot(collection(db, 'shopItems'), snap => {
-    shopItems = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-    itemsMap = Object.fromEntries(shopItems.map(i => [i.id, i]));
-    renderItems(); renderInventory();
-  }));
-}
-
-async function ensureShopCards(){
-  const snap = await getDocs(collection(db, 'shopCards'));
-  if(snap.empty){
-    const seed = [
-      { id:'messi',    name:'Lionel Messi',     club:'Inter Miami',  pos:'DEL', rating:99, price:500, emoji:'🐐', c1:'#8ee7ff', c2:'#ffb3d9', available:true },
-      { id:'cr7',      name:'Cristiano Ronaldo',club:'Al-Nassr',     pos:'DEL', rating:97, price:450, emoji:'👑', c1:'#ffe58a', c2:'#ffb36b', available:true },
-      { id:'mbappe',   name:'Kylian Mbappé',    club:'Real Madrid',  pos:'DEL', rating:96, price:400, emoji:'🐢', c1:'#b8c6ff', c2:'#e0d4ff', available:true },
-      { id:'haaland',  name:'Erling Haaland',   club:'Man City',     pos:'DEL', rating:95, price:380, emoji:'🤖', c1:'#9fe8ff', c2:'#a8f0d0', available:true },
-      { id:'vini',     name:'Vinícius Jr.',     club:'Real Madrid',  pos:'EXT', rating:94, price:350, emoji:'💫', c1:'#ffe98a', c2:'#a6f0b8', available:true },
-      { id:'bellingham',name:'Jude Bellingham', club:'Real Madrid',  pos:'MED', rating:93, price:320, emoji:'🎩', c1:'#ffffff', c2:'#c9d6ff', available:true },
-      { id:'yamal',    name:'Lamine Yamal',     club:'Barcelona',    pos:'EXT', rating:92, price:300, emoji:'🌟', c1:'#ffb3b3', c2:'#ffe08a', available:true },
-      { id:'rodri',    name:'Rodri',            club:'Man City',     pos:'MED', rating:92, price:280, emoji:'🧠', c1:'#a8f0d0', c2:'#9fe8ff', available:true },
-      { id:'dibu',     name:'Dibu Martínez',    club:'Aston Villa',  pos:'POR', rating:90, price:250, emoji:'🧤', c1:'#c9d6ff', c2:'#e0d4ff', available:true },
-      { id:'kane',     name:'Harry Kane',       club:'Bayern',       pos:'DEL', rating:91, price:240, emoji:'🎯', c1:'#ffffff', c2:'#b8c6ff', available:true },
-      { id:'neymar',   name:'Neymar Jr.',       club:'Santos',       pos:'EXT', rating:89, price:220, emoji:'🪄', c1:'#ffe08a', c2:'#a6f0b8', available:true },
-      { id:'modric',   name:'Luka Modrić',      club:'Milan',        pos:'MED', rating:88, price:200, emoji:'🎻', c1:'#e0d4ff', c2:'#ffb3d9', available:true }
-    ];
-    await Promise.all(seed.map(c => setDoc(doc(db, 'shopCards', c.id), c)));
-  }
-}
-
-async function ensureShopItems(){
-  const snap = await getDocs(collection(db, 'shopItems'));
-  if(snap.empty){
-    const seed = [
-      { id:'booster_x2',  name:'Booster x2',     description:'Duplica tus LuiCoins en el próximo trade.', price:150, emoji:'⚡', c1:'#ffe98a', c2:'#ffb36b', category:'BOOSTER', available:true },
-      { id:'skin_neon',   name:'Skin Neón',      description:'Un look bien cyberpunk para tu perfil.',    price:200, emoji:'💎', c1:'#b8c6ff', c2:'#e0d4ff', category:'COSMÉTICO', available:true },
-      { id:'suerte',      name:'Amuleto de Suerte', description:'Dicen que da suerte en los trades...',  price:100, emoji:'🍀', c1:'#a8f0d0', c2:'#9fe8ff', category:'ESPECIAL', available:true }
-    ];
-    await Promise.all(seed.map(i => setDoc(doc(db, 'shopItems', i.id), i)));
-  }
-}
-
-/* =========================================================
-   AUTH STATE
-========================================================= */
+/* ========== ESTADO ========== */
 onAuthStateChanged(auth, async (user) => {
-  authUser = user;
-  if(!user){
-    $('loginOverlay').classList.remove('hidden');
-    cleanupListeners();
-    return;
+  $("loading").classList.remove("hidden");
+  if (user) {
+    currentUser = user;
+    try {
+      await ensureUserDoc(user);
+      subscribeProfile(user.uid);
+      subscribeShop();
+      $("authScreen").classList.add("hidden");
+      $("appScreen").classList.remove("hidden");
+      switchTab("home");
+    } catch (e) {
+      console.error(e);
+      authMsg.textContent = "Error al cargar el perfil: " + e.message;
+      $("authScreen").classList.remove("hidden");
+      $("appScreen").classList.add("hidden");
+    }
+  } else {
+    currentUser = null; profile = null; isAdmin = false; shopItemsCache = [];
+    if (unsubProfile) { unsubProfile(); unsubProfile = null; }
+    if (unsubShop) { unsubShop(); unsubShop = null; }
+    $("appScreen").classList.add("hidden");
+    $("authScreen").classList.remove("hidden");
   }
-  try{
-    await ensureUserDoc(user);
-    await ensureShopCards();
-    await ensureShopItems();
-    $('loginOverlay').classList.add('hidden');
-    startListeners();
-  }catch(e){
-    console.error('Error inicializando usuario:', e);
-    $('loginError').textContent = 'Error conectando a Firestore. Revisá las reglas.';
-  }
+  $("loading").classList.add("hidden");
 });
 
-/* =========================================================
-   UI GENERAL
-========================================================= */
-function updateAdminUI(){
-  const isAdmin = !!(userData && userData.isAdmin);
-  $('adminMenuBtn').classList.toggle('hide', !isAdmin);
-}
-
-function renderAll(){
-  updateCoinsUI(false);
-  renderCards();
-  renderItems();
-  renderTop();
-  renderProfile();
-  renderCollection();
-  renderInventory();
-  if(userData){
-    const trigger = $('userMenuTrigger');
-    if(userData.avatar && userData.avatar.startsWith('data:image')){
-      trigger.textContent = '';
-      trigger.style.backgroundImage = `url(${userData.avatar})`;
-    } else {
-      trigger.style.backgroundImage = 'none';
-      trigger.textContent = userData.avatar || '😎';
-    }
-  }
-}
-
-function updateCoinsUI(pop){
-  if(!userData) return;
-  $('coinCount').textContent = userData.coins || 0;
-  if(pop){
-    const pill = $('coinPill');
-    pill.classList.remove('pop'); void pill.offsetWidth; pill.classList.add('pop');
-  }
-}
-
-/* =========================================================
-   CARDS (Luicards)
-========================================================= */
-function renderCards(){
-  const grid = $('cardsGrid');
-  if(!grid) return;
-  grid.innerHTML = '';
-  const disponibles = shopCards.filter(c => c.available);
-  if(!disponibles.length){
-    grid.innerHTML = '<p style="color:var(--muted)">La tienda está vacía. El admin todavía no cargó Luicards 😴</p>';
-    return;
-  }
-  const owned = userData?.owned || [];
-  disponibles.forEach(card => {
-    const isOwned = owned.includes(card.id);
-    const el = document.createElement('div');
-    el.className = 'card' + (isOwned ? ' owned' : '');
-    el.style.setProperty('--c1', card.c1 || '#8ee7ff');
-    el.style.setProperty('--c2', card.c2 || '#ffb3d9');
-    el.innerHTML = `
-      ${isOwned ? '<div class="owned-tag">✓ TUYA</div>' : ''}
-      <div class="card-top">
-        <span class="rating">${card.rating}</span>
-        <span class="pos">${escapeHtml(card.pos || 'DEL')}</span>
-      </div>
-      <div class="card-emoji">${card.emoji || '⚽'}</div>
-      <div class="card-name">${escapeHtml(card.name)}</div>
-      <div class="card-club">${escapeHtml(card.club || '—')}</div>
-      <div class="card-bottom">
-        <span class="price">🪙 ${card.price}</span>
-        ${isOwned
-          ? '<button class="trade-btn">🔄 Trade</button>'
-          : `<button class="buy" data-id="${card.id}" ${!userData ? 'disabled' : ''}>Comprar</button>`}
-      </div>`;
-    grid.appendChild(el);
-  });
-  grid.querySelectorAll('.buy').forEach(b => b.addEventListener('click', () => buyCard(b.dataset.id)));
-  grid.querySelectorAll('.trade-btn').forEach(b => b.addEventListener('click', openTradeModal));
-}
-
-async function buyCard(cardId){
-  if(!userData) return;
-  const card = cardsMap[cardId];
-  if(!card) return;
-  if((userData.owned || []).includes(cardId)){ toast('Ya tenés esa carta 😎'); return; }
-  if((userData.coins || 0) < card.price){
-    toast(`Te faltan ${card.price - userData.coins} LuiCoins 🪙`);
-    return;
-  }
-  try{
-    await runTransaction(db, async (tx) => {
-      const uref = doc(db, 'users', authUser.uid);
-      const usnap = await tx.get(uref);
-      if(!usnap.exists()) throw new Error('User not found');
-      const u = usnap.data();
-      if((u.owned || []).includes(cardId)) throw new Error('Already owned');
-      if((u.coins || 0) < card.price) throw new Error('Insufficient funds');
-      tx.update(uref, { coins: (u.coins || 0) - card.price, owned: [...(u.owned || []), cardId] });
+async function ensureUserDoc(user) {
+  const ref = doc(db, "users", user.uid);
+  const snap = await getDoc(ref);
+  if (!snap.exists()) {
+    await setDoc(ref, {
+      email: user.email,
+      displayName: user.displayName || user.email.split("@")[0],
+      coins: 0, avatarUrl: "", bio: "", theme: "default",
+      createdAt: serverTimestamp()
     });
-    toast(`¡${card.name} es tuya! ${card.emoji || '⚽'}`);
-  }catch(e){
-    console.error(e);
-    toast('No se pudo comprar: ' + (e.message || 'error'));
   }
 }
 
-/* =========================================================
-   ITEMS (Tienda general)
-========================================================= */
-function renderItems(){
-  const grid = $('itemsGrid');
-  if(!grid) return;
-  grid.innerHTML = '';
-  const disponibles = shopItems.filter(i => i.available);
-  if(!disponibles.length){
-    grid.innerHTML = '<p style="color:var(--muted)">La tienda general está vacía. El admin todavía no cargó items 😴</p>';
+function subscribeProfile(uid) {
+  if (unsubProfile) unsubProfile();
+  unsubProfile = onSnapshot(doc(db, "users", uid), (snap) => {
+    if (!snap.exists()) return;
+    profile = { id: snap.id, ...snap.data() };
+    isAdmin = ADMIN_EMAILS.map(e => e.toLowerCase())
+      .includes((profile.email || "").toLowerCase()) || profile.isAdmin === true;
+    renderProfile();
+  });
+}
+
+function subscribeShop() {
+  if (unsubShop) unsubShop();
+  unsubShop = onSnapshot(collection(db, "shop"), (snap) => {
+    shopItemsCache = snap.docs.map(d => ({ id: d.id, ...d.data() }))
+      .sort((a, b) => (a.price || 0) - (b.price || 0));
+    const active = document.querySelector(".tab.active")?.dataset.tab;
+    if (active === "shop") renderShop();
+    if (active === "admin" && isAdmin) renderAdminShop();
+  });
+}
+
+function renderProfile() {
+  const name = profile.displayName || (profile.email || "").split("@")[0] || "Jugador";
+  if (lastCoins !== (profile.coins || 0)) {
+    $("coinDisplay").textContent = "🪙 " + fmt(profile.coins || 0);
+    if (lastCoins !== 0) {
+      const pill = $("coinDisplay");
+      pill.classList.remove("bump"); void pill.offsetWidth; pill.classList.add("bump");
+    }
+    lastCoins = profile.coins || 0;
+  }
+  animateNumber($("homeCoins"), parseInt(($("homeCoins").textContent || "0").replace(/\./g,"")) || 0, profile.coins || 0);
+  $("shopCoins").textContent = fmt(profile.coins || 0);
+  $("userName").textContent = name;
+  $("homeName").textContent = name;
+  renderAvatar($("topAvatar"), profile.avatarUrl, name);
+  if (profile.theme && document.body.dataset.theme !== profile.theme) {
+    applyTheme(profile.theme, true);
+  }
+  $("adminTab").classList.toggle("hidden", !isAdmin);
+  const active = document.querySelector(".tab.active")?.dataset.tab;
+  if (!isAdmin && active === "admin") switchTab("home");
+  if (active === "profile") fillProfileForm();
+  if (active === "shop") renderShop();
+}
+
+/* ========== NAV ========== */
+document.querySelectorAll(".tab").forEach(btn =>
+  btn.addEventListener("click", () => switchTab(btn.dataset.tab)));
+$("topAvatar").addEventListener("click", () => switchTab("profile"));
+
+function switchTab(name) {
+  document.querySelectorAll(".tab").forEach(b =>
+    b.classList.toggle("active", b.dataset.tab === name));
+  document.querySelectorAll(".tab-panel").forEach(p =>
+    p.classList.toggle("hidden", p.id !== "tab-" + name));
+  if (name === "home") loadHome();
+  if (name === "shop") renderShop();
+  if (name === "leaderboard") loadLeaderboard();
+  if (name === "cards") loadMyCards();
+  if (name === "profile") loadProfileTab();
+  if (name === "admin") loadAdminPanel();
+}
+
+/* ========== HOME ========== */
+async function loadHome() {
+  if (!currentUser) return;
+  const grid = $("homeCards");
+  grid.innerHTML = Array(4).fill('<div class="skeleton skeleton-card"></div>').join("");
+  $("homeNoCards").classList.add("hidden");
+  if (profile.createdAt?.seconds) {
+    const d = new Date(profile.createdAt.seconds * 1000);
+    $("homeMember").textContent = d.toLocaleDateString("es-ES", { month: "short", year: "2-digit" });
+  }
+  try {
+    const snap = await getDocs(query(collection(db, "cards"), where("ownerUid", "==", currentUser.uid)));
+    const cards = snap.docs.map(d => ({ id: d.id, ...d.data() })).sort(byCreatedDesc);
+    $("homeCardCount").textContent = cards.length;
+    grid.innerHTML = "";
+    if (!cards.length) $("homeNoCards").classList.remove("hidden");
+    else cards.slice(0, 4).forEach(c => grid.appendChild(cardEl(c)));
+  } catch (e) { console.error(e); grid.innerHTML = ""; }
+  try {
+    const usersSnap = await getDocs(query(collection(db, "users"), orderBy("coins", "desc"), limit(200)));
+    const idx = usersSnap.docs.findIndex(d => d.id === currentUser.uid);
+    $("homeRank").textContent = idx >= 0 ? "#" + (idx + 1) : "—";
+    lastRank = idx + 1;
+  } catch (e) { console.error(e); }
+}
+
+/* ========== TIENDA (usuario) ========== */
+function renderShop() {
+  const grid = $("shopGrid");
+  if (!profile) return;
+  if (!shopItemsCache.length) {
+    grid.innerHTML = `<div class="empty" style="grid-column:1/-1">🛒<p>La tienda está vacía. ¡Vuelve más tarde!</p></div>`;
     return;
   }
-  const inv = userData?.inventory || [];
-  disponibles.forEach(item => {
-    const owned = inv.filter(id => id === item.id).length;
-    const el = document.createElement('div');
-    el.className = 'shop-item';
-    el.style.setProperty('--c1', item.c1 || '#ffe98a');
-    el.style.setProperty('--c2', item.c2 || '#ffb3b3');
+  grid.innerHTML = "";
+  shopItemsCache.forEach(item => {
+    const rarity = RARITIES[item.rarity] || RARITIES.common;
+    const coins = profile.coins || 0;
+    const canAfford = coins >= (item.price || 0);
+    const inStock = item.stock === -1 || item.stock > 0;
+    const el = document.createElement("div");
+    el.className = `lui-card ${rarity.cls} shop-item`;
+    const stockTxt = item.stock === -1
+      ? "∞ disponibles"
+      : item.stock === 0 ? "Agotado"
+      : `${item.stock} disponible${item.stock === 1 ? "" : "s"}${item.stock === 1 ? " (¡última!)" : ""}`;
     el.innerHTML = `
-      ${item.category ? `<div class="cat-tag">${escapeHtml(item.category)}</div>` : ''}
-      <span class="s-emoji">${item.emoji || '🎁'}</span>
-      <div class="s-name">${escapeHtml(item.name)}</div>
-      <div class="s-desc">${escapeHtml(item.description || '')}</div>
-      <div class="s-bottom">
-        <span class="s-price">🪙 ${item.price}</span>
-        ${owned > 0
-          ? `<span class="s-owned">✓ x${owned}</span><button class="buy" data-id="${item.id}" style="margin-left:6px">+1</button>`
-          : `<button class="buy" data-id="${item.id}">Comprar</button>`}
+      <div class="card-img">
+        ${item.imageUrl ? `<img src="${esc(item.imageUrl)}" alt="" loading="lazy" onerror="this.style.display='none'">` : "🃏"}
+      </div>
+      <div class="card-body">
+        <h4>${esc(item.name)}</h4>
+        <span class="rarity-tag">${rarity.label}</span>
+        ${item.description ? `<p>${esc(item.description)}</p>` : ""}
+        <div class="shop-footer">
+          <div class="shop-price">🪙 ${fmt(item.price)}</div>
+          <div class="shop-stock ${item.stock === 1 ? "low" : ""}">${stockTxt}</div>
+          <button class="btn buy" data-buy-id="${esc(item.id)}" ${(!canAfford || !inStock) ? "disabled" : ""}>
+            ${!inStock ? "❌ Sin stock"
+              : !canAfford ? `💸 Faltan ${fmt((item.price || 0) - coins)}`
+              : "🛒 Comprar"}
+          </button>
+        </div>
       </div>`;
+    const btn = el.querySelector(".btn.buy");
+    if (btn && !btn.disabled) btn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      buyItem(item);
+    });
     grid.appendChild(el);
   });
-  grid.querySelectorAll('.buy').forEach(b => b.addEventListener('click', () => buyItem(b.dataset.id)));
 }
+$("btnRefreshShop").addEventListener("click", () => renderShop());
 
-async function buyItem(itemId){
-  if(!userData) return;
-  const item = itemsMap[itemId];
-  if(!item) return;
-  if((userData.coins || 0) < item.price){
-    toast(`Te faltan ${item.price - userData.coins} LuiCoins 🪙`);
-    return;
-  }
-  try{
+async function buyItem(item) {
+  if (!currentUser) return;
+  if (!confirm(`¿Comprar "${item.name}" por 🪙 ${fmt(item.price)} LuiCoins?`)) return;
+
+  const userRef = doc(db, "users", currentUser.uid);
+  const itemRef = doc(db, "shop", item.id);
+  const cardRef = doc(collection(db, "cards"));
+
+  try {
     await runTransaction(db, async (tx) => {
-      const uref = doc(db, 'users', authUser.uid);
-      const usnap = await tx.get(uref);
-      if(!usnap.exists()) throw new Error('User not found');
-      const u = usnap.data();
-      if((u.coins || 0) < item.price) throw new Error('Insufficient funds');
-      tx.update(uref, {
-        coins: (u.coins || 0) - item.price,
-        inventory: [...(u.inventory || []), itemId]
+      const userSnap = await tx.get(userRef);
+      const itemSnap = await tx.get(itemRef);
+      if (!itemSnap.exists()) throw new Error("Esta carta ya no está disponible");
+      if (!userSnap.exists()) throw new Error("Usuario no encontrado");
+      const i = itemSnap.data();
+      const u = userSnap.data();
+      if (i.stock === 0) throw new Error("Sin stock");
+      if ((u.coins || 0) < i.price) throw new Error("No tienes suficientes LuiCoins");
+      tx.update(userRef, { coins: increment(-i.price) });
+      if (i.stock !== -1) tx.update(itemRef, { stock: increment(-1) });
+      tx.set(cardRef, {
+        ownerUid: currentUser.uid,
+        ownerName: profile.displayName || "",
+        name: i.name,
+        rarity: i.rarity,
+        imageUrl: i.imageUrl || "",
+        description: i.description || "",
+        fromShop: item.id,
+        createdAt: serverTimestamp()
       });
     });
-    toast(`¡${item.name} comprado! ${item.emoji || '🎁'}`);
-  }catch(e){
-    console.error(e);
-    toast('No se pudo comprar: ' + (e.message || 'error'));
+    toast(`¡Compraste "${item.name}"!`, "success");
+    loadHome();
+  } catch (e) {
+    toast(e.message || "Error al comprar", "error");
   }
 }
 
-function renderInventory(){
-  const grid = $('inventoryGrid');
-  if(!grid) return;
-  const inv = userData?.inventory || [];
-  const grouped = {};
-  inv.forEach(id => { grouped[id] = (grouped[id] || 0) + 1; });
-  const entries = Object.entries(grouped).filter(([id]) => itemsMap[id]);
-  if(!entries.length){
-    grid.innerHTML = '<p style="color:var(--muted);font-size:.85rem">No tenés items todavía. Andá a la tienda 🛒</p>';
-    return;
+/* ========== LEADERBOARD ========== */
+$("btnRefreshLb").addEventListener("click", loadLeaderboard);
+
+async function loadLeaderboard() {
+  const list = $("leaderboardList");
+  list.innerHTML = `<li class="muted" style="justify-content:center">Cargando…</li>`;
+  try {
+    const snap = await getDocs(query(collection(db, "users"), orderBy("coins", "desc"), limit(25)));
+    list.innerHTML = "";
+    if (snap.empty) {
+      list.innerHTML = `<li class="muted" style="justify-content:center">Todavía no hay jugadores.</li>`;
+      return;
+    }
+    snap.forEach((d, i) => {
+      const u = d.data();
+      const li = document.createElement("li");
+      if (i === 0) li.className = "top1";
+      else if (i === 1) li.className = "top2";
+      else if (i === 2) li.className = "top3";
+      const medal = i === 0 ? "👑" : i === 1 ? "🥈" : i === 2 ? "🥉" : "#" + (i + 1);
+      const av = document.createElement("div");
+      av.className = "avatar lb-avatar";
+      av.innerHTML = `<img alt=""><span class="initial"></span>`;
+      renderAvatar(av, u.avatarUrl, u.displayName);
+      li.innerHTML = `
+        <span class="rank">${medal}</span>
+        <span class="lb-name">${esc(u.displayName || "Jugador")}${d.id === currentUser.uid ? " <span class='muted' style='font-weight:500'>(tú)</span>" : ""}</span>
+        <span class="lb-coins">🪙 ${fmt(u.coins || 0)}</span>`;
+      li.insertBefore(av, li.children[1]);
+      list.appendChild(li);
+    });
+  } catch (e) {
+    console.error(e);
+    list.innerHTML = `<li class="muted" style="justify-content:center">Error al cargar el leaderboard.</li>`;
   }
-  grid.innerHTML = entries.map(([id, count]) => {
-    const item = itemsMap[id];
-    return `<div class="collection-item" style="--c1:${item.c1 || '#ffe98a'};--c2:${item.c2 || '#ffb3b3'}">
-      <span class="c-emoji">${item.emoji || '🎁'}</span>
-      ${escapeHtml(item.name)}
-      <div style="font-size:.72rem;opacity:.75;margin-top:2px">x${count}</div>
+}
+
+/* ========== MIS CARDS ========== */
+async function loadMyCards() {
+  if (!currentUser) return;
+  const grid = $("myCards");
+  grid.innerHTML = Array(6).fill('<div class="skeleton skeleton-card"></div>').join("");
+  $("noCards").classList.add("hidden");
+  try {
+    const snap = await getDocs(query(collection(db, "cards"), where("ownerUid", "==", currentUser.uid)));
+    const cards = snap.docs.map(d => ({ id: d.id, ...d.data() })).sort(byCreatedDesc);
+    grid.innerHTML = "";
+    if (!cards.length) { $("noCards").classList.remove("hidden"); return; }
+    cards.forEach(c => grid.appendChild(cardEl(c)));
+  } catch (e) {
+    console.error(e);
+    grid.innerHTML = "";
+    $("noCards").classList.remove("hidden");
+  }
+}
+
+/* ========== CARD EL + MODAL ========== */
+function cardEl(card, opts = {}) {
+  const { interactive = true } = opts;
+  const r = RARITIES[card.rarity] || RARITIES.common;
+  const div = document.createElement("div");
+  div.className = "lui-card " + r.cls;
+  div.innerHTML = `
+    <div class="card-img">
+      ${card.imageUrl
+        ? `<img src="${esc(card.imageUrl)}" alt="" loading="lazy" onerror="this.style.display='none'">`
+        : "🃏"}
+    </div>
+    <div class="card-body">
+      <h4>${esc(card.name || "Sin nombre")}</h4>
+      <span class="rarity-tag">${r.label}</span>
+      ${card.description ? `<p>${esc(card.description)}</p>` : ""}
     </div>`;
-  }).join('');
+  if (interactive) div.addEventListener("click", () => openCardModal(card));
+  return div;
 }
 
-/* =========================================================
-   TOP
-========================================================= */
-function renderTop(){
-  const list = $('topList');
-  if(!list) return;
-  if(!allUsers.length){
-    list.innerHTML = '<p style="color:var(--muted)">Cargando ranking...</p>';
-    return;
-  }
-  const sorted = [...allUsers].sort((a,b) => (b.coins||0) - (a.coins||0));
-  const medals = ['🥇','🥈','🥉'];
-  list.innerHTML = sorted.map((u,i) => {
-    const isImg = u.avatar && u.avatar.startsWith('data:image');
-    const avStyle = isImg ? `background-image:url(${u.avatar});` : '';
-    return `
-    <div class="rank ${u.id === authUser?.uid ? 'me' : ''} ${i<3 ? 'p'+(i+1) : ''}">
-      <div class="pos-num">${i<3 ? medals[i] : '#'+(i+1)}</div>
-      <div class="r-avatar" style="${avStyle}">${isImg ? '' : (u.avatar || '😎')}</div>
-      <div class="who">
-        ${u.id === authUser?.uid ? '⭐ ' : ''}${escapeHtml(u.name || 'Jugador')}${u.isAdmin ? '<span class="admin-badge">ADMIN</span>' : ''}
-        <small>${escapeHtml(u.bio || 'Jugador de la 5D')}</small>
+function openCardModal(card) {
+  const r = RARITIES[card.rarity] || RARITIES.common;
+  $("modalContent").innerHTML = `
+    <div class="lui-card ${r.cls}">
+      <div class="card-img">${card.imageUrl ? `<img src="${esc(card.imageUrl)}" alt="">` : "🃏"}</div>
+      <div class="card-body">
+        <h4>${esc(card.name || "Sin nombre")}</h4>
+        <span class="rarity-tag">${r.label}</span>
+        ${card.description ? `<p>${esc(card.description)}</p>` : ""}
       </div>
-      <div class="amount">🪙 ${u.coins || 0}</div>
-    </div>
-  `}).join('');
+    </div>`;
+  $("modal").classList.remove("hidden");
 }
+$("modalBackdrop").addEventListener("click", closeModal);
+document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeModal(); });
+function closeModal() { $("modal").classList.add("hidden"); }
 
-/* =========================================================
-   PERFIL Y PERSONALIZACIÓN AVANZADA
-========================================================= */
-const EMOJIS = ['🐐','👑','🐢','🤖','💫','🎩','🌟','🧠','🧤','🎯','🪄','🎻','⚽','🔥','💎','🦁','🐉','👽','🥷','🧙','😎','🤡','🐔','🦄','🐺','🐻','🦊','🐯','🦅','🍀','💜','⚡'];
-const BANNERS = [
-  'linear-gradient(135deg,#b14aed,#00e5ff)',
-  'linear-gradient(135deg,#ff5f6d,#ffc371)',
-  'linear-gradient(135deg,#7ef7c8,#00e5ff)',
-  'linear-gradient(135deg,#f7971e,#ffd200)',
-  'linear-gradient(135deg,#2b5876,#4e4376)',
-  'linear-gradient(135deg,#f857a6,#ff5858)',
-  'linear-gradient(135deg,#8e2de2,#4a00e0)',
-  'linear-gradient(135deg,#0f2027,#203a43,#2c5364)',
-  'linear-gradient(135deg,#ffd23f,#ff9f1c)',
-  'linear-gradient(135deg,#00c9ff,#92fe9d)'
-];
-
-let currentAvatar = '';
-let currentBanner = '';
-
-// Achicar imagen a Base64 para ahorrar espacio
-function procesarImagen(file, maxWidth, maxHeight) {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = (e) => {
-      const img = new Image();
-      img.src = e.target.result;
-      img.onload = () => {
-        let width = img.width;
-        let height = img.height;
-        if (width > height) {
-          if (width > maxWidth) { height *= maxWidth / width; width = maxWidth; }
-        } else {
-          if (height > maxHeight) { width *= maxHeight / height; height = maxHeight; }
-        }
-        const canvas = document.createElement('canvas');
-        canvas.width = width;
-        canvas.height = height;
-        const ctx = canvas.getContext('2d');
-        ctx.drawImage(img, 0, 0, width, height);
-        resolve(canvas.toDataURL('image/jpeg', 0.75)); 
-      };
-      img.onerror = error => reject(error);
-    };
-    reader.onerror = error => reject(error);
-  });
-}
-
-$('avatarUpload').addEventListener('change', async (e) => {
-  const file = e.target.files[0];
-  if(!file) return;
-  toast('Procesando foto...');
-  const base64 = await procesarImagen(file, 200, 200);
-  currentAvatar = base64;
-  renderProfilePreview();
-  $('editAvatar').value = ''; 
-});
-
-$('bannerUpload').addEventListener('change', async (e) => {
-  const file = e.target.files[0];
-  if(!file) return;
-  toast('Procesando banner...');
-  const base64 = await procesarImagen(file, 800, 300);
-  currentBanner = base64;
-  renderProfilePreview();
-});
-
-(function buildEmojiPicker(){
-  const picker = $('emojiPicker');
-  picker.innerHTML = EMOJIS.map(e => `<button type="button" data-emoji="${e}">${e}</button>`).join('');
-  picker.querySelectorAll('button').forEach(b => b.addEventListener('click', () => {
-    $('editAvatar').value = b.dataset.emoji;
-    currentAvatar = b.dataset.emoji;
-    renderProfilePreview();
-  }));
-})();
-
-(function buildBannerPresets(){
-  const presets = $('bannerPresets');
-  presets.innerHTML = BANNERS.map((b,i) =>
-    `<button type="button" data-banner="${escapeHtml(b)}" style="background:${b}" title="Banner ${i+1}"></button>`
-  ).join('');
-  presets.querySelectorAll('button').forEach(b => b.addEventListener('click', () => {
-    presets.querySelectorAll('button').forEach(x => x.classList.remove('selected'));
-    b.classList.add('selected');
-    currentBanner = b.dataset.banner;
-    renderProfilePreview();
-  }));
-})();
-
-function renderProfile(){
-  if(!userData) return;
-  
-  currentAvatar = userData.avatar || '😎';
-  currentBanner = userData.banner || 'linear-gradient(135deg,#b14aed,#00e5ff)';
-  
-  renderProfilePreview();
-
-  $('profileCoinsBig').textContent = userData.coins || 0;
-  $('profileCardsCount').textContent = (userData.owned || []).length;
-  $('profileItemsCount').textContent = (userData.inventory || []).length;
-
-  if(document.activeElement !== $('editName')) $('editName').value = userData.name || '';
-  if(document.activeElement !== $('editBio')) $('editBio').value = userData.bio || '';
-  if(document.activeElement !== $('editColor')) $('editColor').value = userData.color || '#b14aed';
-
-  document.querySelectorAll('#bannerPresets button').forEach(b => {
-    b.classList.toggle('selected', b.dataset.banner === currentBanner);
-  });
-}
-
-function renderProfilePreview(){
-  const name = $('editName').value.trim() || 'Jugador';
-  const bio = $('editBio').value.trim() || 'Sin bio todavía...';
-  
-  const avContainer = $('profileAvatarBig');
-  const labelHTML = '<label class="edit-avatar-btn" for="avatarUpload">📷</label>';
-  
-  if (currentAvatar.startsWith('data:image') || currentAvatar.startsWith('http')) {
-    avContainer.style.backgroundImage = `url(${currentAvatar})`;
-    avContainer.innerHTML = labelHTML;
-  } else {
-    avContainer.style.backgroundImage = 'none';
-    avContainer.innerHTML = (currentAvatar || '😎') + labelHTML;
-  }
-
-  const bannerContainer = $('profileBanner');
-  const bannerLabel = '<label class="edit-image-btn" for="bannerUpload">📷 Cambiar Banner</label>';
-  
-  if (currentBanner.startsWith('data:image') || currentBanner.startsWith('http')) {
-    bannerContainer.style.backgroundImage = `url(${currentBanner})`;
-    bannerContainer.style.background = ''; 
-    bannerContainer.innerHTML = bannerLabel;
-  } else {
-    bannerContainer.style.backgroundImage = 'none';
-    bannerContainer.style.background = currentBanner;
-    bannerContainer.innerHTML = bannerLabel;
-  }
-
-  $('profileNameBig').innerHTML = escapeHtml(name) + (userData?.isAdmin ? ' <span class="admin-badge">ADMIN</span>' : '');
-  $('profileBioBig').textContent = bio;
-}
-
-['editName','editBio','editAvatar'].forEach(id => $(id).addEventListener('input', () => {
-  if(id === 'editAvatar') currentAvatar = $(id).value;
-  renderProfilePreview();
-}));
-
-$('saveProfile').addEventListener('click', async () => {
-  if(!userData) return;
-  const name = $('editName').value.trim().slice(0,18);
-  if(!name){ toast('Poné un nombre, che 🙃'); return; }
-  
-  try{
-    await updateDoc(doc(db, 'users', authUser.uid), {
-      name: name,
-      bio: $('editBio').value.trim().slice(0,60),
-      color: $('editColor').value,
-      avatar: currentAvatar,
-      banner: currentBanner
-    });
-    toast('¡Perfil actualizado! 🚀');
-  }catch(e){
-    console.error(e);
-    toast('Error al guardar. Revisá que las imágenes no sean gigantes.');
-  }
-});
-
-function renderCollection(){
-  const grid = $('collectionGrid');
-  if(!grid) return;
-  const owned = (userData?.owned || []).map(id => cardsMap[id]).filter(Boolean);
-  if(!owned.length){
-    grid.innerHTML = '<p style="color:var(--muted);font-size:.85rem">Todavía no tenés cartas. Andá a la tienda 🛒</p>';
-    return;
-  }
-  grid.innerHTML = owned.map(c => `
-    <div class="collection-item" style="--c1:${c.c1 || '#8ee7ff'};--c2:${c.c2 || '#ffb3d9'}">
-      <span class="c-emoji">${c.emoji || '⚽'}</span>
-      ${escapeHtml(c.name)}
-      <div style="font-size:.7rem;opacity:.7">${escapeHtml(c.club || '—')} · ${c.rating}</div>
-    </div>
-  `).join('');
-}
-
-/* =========================================================
-   TRADE
-========================================================= */
-function openTradeModal(){
-  if(!userData) return;
-  const myCards = (userData.owned || []).map(id => cardsMap[id]).filter(Boolean);
-  if(!myCards.length){ toast('No tenés cartas para tradear 😅'); return; }
-
-  $('tradeMyCard').innerHTML = myCards.map(c =>
-    `<option value="${c.id}">${c.emoji || '⚽'} ${escapeHtml(c.name)} (${c.rating})</option>`
-  ).join('');
-
-  const others = allUsers.filter(u => u.id !== authUser.uid);
-  const playerSel = $('tradeTargetPlayer');
-  if(!others.length){
-    playerSel.innerHTML = '<option value="">No hay otros jugadores todavía</option>';
-  } else {
-    playerSel.innerHTML = others.map(u =>
-      `<option value="${u.id}">${escapeHtml(u.name || 'Jugador')} (${u.coins || 0} 🪙)</option>`
-    ).join('');
-  }
-  updateTradeTargetCards();
-  $('tradeTargetPlayer').onchange = updateTradeTargetCards;
-  $('tradeModal').classList.add('open');
-}
-
-function updateTradeTargetCards(){
-  const targetId = $('tradeTargetPlayer').value;
-  const sel = $('tradeTargetCard');
-  if(!targetId){ sel.innerHTML = '<option value="">—</option>'; return; }
-  const target = allUsers.find(u => u.id === targetId);
-  if(!target){ sel.innerHTML = '<option value="">—</option>'; return; }
-  const cards = (target.owned || []).map(id => cardsMap[id]).filter(Boolean);
-  if(!cards.length){
-    sel.innerHTML = '<option value="">Este jugador no tiene cartas</option>';
-  } else {
-    sel.innerHTML = cards.map(c =>
-      `<option value="${c.id}">${c.emoji || '⚽'} ${escapeHtml(c.name)} (${c.rating})</option>`
-    ).join('');
-  }
-}
-
-$('tradeCancel').addEventListener('click', () => $('tradeModal').classList.remove('open'));
-$('tradeModal').addEventListener('click', e => { if(e.target === $('tradeModal')) $('tradeModal').classList.remove('open'); });
-
-$('tradeConfirm').addEventListener('click', async () => {
-  const myCardId = $('tradeMyCard').value;
-  const targetId = $('tradeTargetPlayer').value;
-  const targetCardId = $('tradeTargetCard').value;
-  if(!myCardId || !targetId || !targetCardId){ toast('Completá todos los campos 🤝'); return; }
-  if(targetId === authUser.uid){ toast('No podés tradear con vos mismo 😅'); return; }
-  try{
-    await runTransaction(db, async (tx) => {
-      const myRef = doc(db, 'users', authUser.uid);
-      const tgRef = doc(db, 'users', targetId);
-      const mySnap = await tx.get(myRef);
-      const tgSnap = await tx.get(tgRef);
-      if(!mySnap.exists() || !tgSnap.exists()) throw new Error('Jugador no encontrado');
-      const my = mySnap.data();
-      const tg = tgSnap.data();
-      const myOwned = my.owned || [];
-      const tgOwned = tg.owned || [];
-      if(!myOwned.includes(myCardId)) throw new Error('Ya no tenés esa carta');
-      if(!tgOwned.includes(targetCardId)) throw new Error('El otro jugador ya no tiene esa carta');
-      tx.update(myRef, { owned: myOwned.filter(id => id !== myCardId).concat(targetCardId) });
-      tx.update(tgRef, { owned: tgOwned.filter(id => id !== targetCardId).concat(myCardId) });
-    });
-    $('tradeModal').classList.remove('open');
-    toast('¡Trade realizado con éxito! 🤝');
-  }catch(e){
-    console.error(e);
-    toast('Error en el trade: ' + (e.message || 'intentá de nuevo'));
-  }
-});
-
-/* =========================================================
-   NOSE
-========================================================= */
-const NOSE_ANSWERS = [
-  'No sé, preguntale a Lui.','Ni idea, pero suena caro.','Eso todavía no está en la 5D.',
-  'Sí.','No.','Tal vez. 🎲','La respuesta es 42.','Comprá Luicards, es la única salida.',
-  'Error 404: ganas no encontradas.','Andá a tradear cartas mejor.'
-];
-$('noseBtn').addEventListener('click', () => {
-  $('noseAnswer').textContent = NOSE_ANSWERS[Math.floor(Math.random()*NOSE_ANSWERS.length)];
-});
-
-/* =========================================================
-   TABS
-========================================================= */
-document.querySelectorAll('.tab').forEach(tab => {
-  tab.addEventListener('click', () => {
-    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
-    tab.classList.add('active');
-    $(tab.dataset.tab).classList.add('active');
-    if(tab.dataset.tab === 'top') renderTop();
-    if(tab.dataset.tab === 'perfil') renderProfile();
-    if(tab.dataset.tab === 'cartas') renderCards();
-    if(tab.dataset.tab === 'tienda') renderItems();
-  });
-});
-
-/* =========================================================
-   USER MENU
-========================================================= */
-$('userMenuTrigger').addEventListener('click', e => {
-  e.stopPropagation();
-  $('userMenuDropdown').classList.toggle('open');
-});
-document.addEventListener('click', e => {
-  if(!e.target.closest('.user-menu')) $('userMenuDropdown').classList.remove('open');
-});
-$('userMenuDropdown').addEventListener('click', e => {
-  const action = e.target.dataset.action;
-  if(!action) return;
-  $('userMenuDropdown').classList.remove('open');
-  if(action === 'profile') document.querySelector('.tab[data-tab="perfil"]').click();
-  if(action === 'admin') openAdminPanel();
-  if(action === 'logout') doLogout();
-});
-$('logoutBtn').addEventListener('click', doLogout);
-
-/* =========================================================
-   ADMIN: TRIGGERS
-========================================================= */
-let keyBuffer = '';
-document.addEventListener('keydown', e => {
-  if(e.ctrlKey && e.shiftKey && e.key.toLowerCase() === 'a'){
-    e.preventDefault(); openAdminPanel(); return;
-  }
-  if(/^[a-z]$/i.test(e.key)){
-    keyBuffer = (keyBuffer + e.key.toLowerCase()).slice(-20);
-    if(keyBuffer.includes('luiadmin')){ keyBuffer = ''; openAdminPanel(); }
-  }
-});
-let logoClicks = 0, logoTimer;
-$('logo').addEventListener('click', () => {
-  logoClicks++;
-  clearTimeout(logoTimer);
-  logoTimer = setTimeout(() => logoClicks = 0, 700);
-  if(logoClicks >= 3){ logoClicks = 0; openAdminPanel(); }
-});
-
-function openAdminPanel(){
-  if(!userData || !userData.isAdmin){
-    toast('No tenés permisos de admin ⛔');
-    return;
-  }
-  renderAdminPlayers();
-  renderAdminCards();
-  renderAdminItems();
-  $('adminPanelModal').classList.add('open');
-}
-function closeAdminPanel(){ $('adminPanelModal').classList.remove('open'); }
-$('adminClose').addEventListener('click', closeAdminPanel);
-$('adminPanelModal').addEventListener('click', e => { if(e.target === $('adminPanelModal')) closeAdminPanel(); });
-
-document.querySelectorAll('.admin-tab').forEach(t => {
-  t.addEventListener('click', () => {
-    document.querySelectorAll('.admin-tab').forEach(x => x.classList.remove('active'));
-    document.querySelectorAll('.admin-section').forEach(x => x.classList.remove('active'));
-    t.classList.add('active');
-    const map = { players:'adminPlayers', shopcards:'adminShopcards', shopitems:'adminShopitems', settings:'adminSettings' };
-    $(map[t.dataset.atab]).classList.add('active');
-  });
-});
-
-/* =========================================================
-   ADMIN: PLAYERS
-========================================================= */
-function renderAdminPlayers(){
-  const list = $('adminPlayersList');
-  list.innerHTML = '';
-  if(!allUsers.length){
-    list.innerHTML = '<p style="color:var(--muted);font-size:.85rem">No hay jugadores.</p>';
-    return;
-  }
-  allUsers.forEach(u => {
-    const isMe = u.id === authUser.uid;
-    const row = document.createElement('div');
-    row.className = 'admin-row';
-    row.innerHTML = `
-      <span class="a-avatar">${u.avatar && !u.avatar.startsWith('data:') ? u.avatar : '🖼️'}</span>
-      <input type="text" class="admin-name" maxlength="18" value="${escapeHtml(u.name || '')}">
-      <input type="number" class="admin-coins" value="${u.coins || 0}">
-      <input type="text" class="admin-avatar" maxlength="4" value="${u.avatar && !u.avatar.startsWith('data:') ? escapeHtml(u.avatar) : ''}" placeholder="Emoji">
-      <span class="a-tag">${(u.owned||[]).length} 🃏</span>
-      <span class="a-tag">${(u.inventory||[]).length} 🛒</span>
-      <button class="admin-btn admin-toggle ${u.isAdmin ? 'is-admin' : ''}" title="Toggle admin">⚡ ${u.isAdmin ? 'ADMIN' : 'hacer admin'}</button>
-      <div class="a-actions">
-        <button class="admin-btn primary btn-save">💾</button>
-        <button class="admin-btn danger btn-del">🗑️</button>
-      </div>`;
-    list.appendChild(row);
-
-    row.querySelector('.btn-save').addEventListener('click', async () => {
-      const name = row.querySelector('.admin-name').value.trim().slice(0,18) || 'Jugador';
-      const coins = Math.max(0, parseInt(row.querySelector('.admin-coins').value) || 0);
-      const av = row.querySelector('.admin-avatar').value.trim().slice(0,4);
-      
-      const updates = { name, coins };
-      if (av) updates.avatar = av; // Solo sobrescribe si escribió un emoji
-      
-      try{
-        await updateDoc(doc(db, 'users', u.id), updates);
-        toast('Jugador actualizado ✅');
-      }catch(e){ toast('Error al guardar'); }
-    });
-    row.querySelector('.admin-toggle').addEventListener('click', async () => {
-      if(isMe && u.isAdmin){
-        const admins = allUsers.filter(x => x.isAdmin);
-        if(admins.length <= 1){ toast('No podés quitarte el admin si sos el único ⚠️'); return; }
+/* ========== PERFIL ========== */
+function buildThemeGrid() {
+  const grid = $("themeGrid");
+  grid.innerHTML = "";
+  Object.entries(THEMES).forEach(([key, t]) => {
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "theme-swatch";
+    btn.dataset.theme = key;
+    btn.innerHTML = `
+      <div class="theme-colors">
+        <span style="background:${t.colors[0]}"></span>
+        <span style="background:${t.colors[1]}"></span>
+      </div>
+      <span class="theme-name">${t.emoji} ${t.name}</span>`;
+    btn.addEventListener("click", async () => {
+      applyTheme(key, true);
+      if (currentUser) {
+        try { await updateDoc(doc(db, "users", currentUser.uid), { theme: key }); toast("Tema aplicado", "success"); }
+        catch (e) { toast("No se pudo guardar el tema", "error"); }
       }
-      if(!confirm(u.isAdmin ? `¿Quitar admin a ${u.name}?` : `¿Hacer admin a ${u.name}?`)) return;
-      try{
-        await updateDoc(doc(db, 'users', u.id), { isAdmin: !u.isAdmin });
-        toast(u.isAdmin ? 'Admin revocado' : 'Admin otorgado ⚡');
-        renderAdminPlayers(); updateAdminUI();
-      }catch(e){ toast('Error al cambiar admin'); }
     });
-    row.querySelector('.btn-del').addEventListener('click', async () => {
-      if(allUsers.length <= 1){ toast('Tiene que quedar al menos un jugador'); return; }
-      if(!confirm(`¿Borrar a "${u.name}"? No se puede deshacer.`)) return;
-      try{
-        await deleteDoc(doc(db, 'users', u.id));
-        toast('Jugador eliminado 🗑️');
-      }catch(e){ toast('Error al eliminar'); }
-    });
+    grid.appendChild(btn);
   });
+  applyTheme(document.body.dataset.theme || "default", false);
 }
 
-$('addPlayerBtn').addEventListener('click', async () => {
-  const name = $('newPlayerName').value.trim().slice(0,18);
-  const coins = Math.max(0, parseInt($('newPlayerCoins').value) || 100);
-  const av = $('newPlayerAvatar').value.trim().slice(0,4) || '😎';
-  if(!name){ toast('Falta el nombre'); return; }
-  try{
-    const id = uid();
-    await setDoc(doc(db, 'users', id), {
-      uid: id, name, coins, owned: [], inventory: [], avatar: av, bio: '',
-      color: '#b14aed', banner: 'linear-gradient(135deg,#b14aed,#00e5ff)',
-      isAdmin: false, provider: 'manual', createdAt: serverTimestamp(), lastLogin: serverTimestamp()
-    });
-    $('newPlayerName').value = ''; $('newPlayerCoins').value = 100; $('newPlayerAvatar').value = '';
-    toast(`Jugador "${name}" agregado ✅`);
-  }catch(e){ toast('Error al agregar'); }
+async function loadProfileTab() {
+  if (!profile) return;
+  fillProfileForm();
+  renderProfileHeader();
+  try {
+    const snap = await getDocs(query(collection(db, "cards"), where("ownerUid", "==", currentUser.uid)));
+    $("profileCards").textContent = snap.size;
+  } catch (e) {}
+  if (lastRank) $("profileRank").textContent = "#" + lastRank;
+}
+
+function fillProfileForm() {
+  if (!profile) return;
+  $("editName").value = profile.displayName || "";
+  $("editAvatar").value = profile.avatarUrl || "";
+  $("editBio").value = profile.bio || "";
+  renderProfileHeader();
+}
+
+function renderProfileHeader() {
+  if (!profile) return;
+  const name = profile.displayName || "Jugador";
+  $("profileName").textContent = name;
+  $("profileBio").textContent = profile.bio || "Sin bio todavía";
+  $("profileCoins").textContent = fmt(profile.coins || 0);
+  renderAvatar($("profileAvatar"), profile.avatarUrl, name);
+}
+
+$("btnSaveProfile").addEventListener("click", async () => {
+  if (!currentUser) return;
+  const msg = $("profileMsg");
+  msg.textContent = "";
+  const name = $("editName").value.trim().slice(0, 30);
+  const avatarUrl = $("editAvatar").value.trim();
+  const bio = $("editBio").value.trim().slice(0, 80);
+  if (!name) { msg.style.color = "#fca5a5"; msg.textContent = "El nombre no puede estar vacío."; return; }
+  if (avatarUrl && !/^https?:\/\//i.test(avatarUrl)) {
+    msg.style.color = "#fca5a5"; msg.textContent = "La URL del avatar debe empezar con http(s)://"; return;
+  }
+  try {
+    await updateProfile(currentUser, { displayName: name });
+    await updateDoc(doc(db, "users", currentUser.uid), { displayName: name, avatarUrl, bio });
+    toast("Perfil actualizado", "success");
+    msg.textContent = "";
+  } catch (e) {
+    msg.style.color = "#fca5a5";
+    msg.textContent = "Error: " + e.message;
+  }
 });
 
-/* =========================================================
-   ADMIN: CARDS
-========================================================= */
-function renderAdminCards(){
-  const list = $('adminCardsList');
-  list.innerHTML = '';
-  if(!shopCards.length){
-    list.innerHTML = '<p style="color:var(--muted);font-size:.85rem">No hay Luicards cargadas.</p>';
-    return;
-  }
-  shopCards.forEach(card => {
-    const row = document.createElement('div');
-    row.className = 'admin-row';
-    row.innerHTML = `
-      <input type="text" class="ac-emoji" maxlength="4" value="${card.emoji || '⚽'}" style="max-width:50px; text-align:center;">
-      <input type="text" class="ac-name" value="${escapeHtml(card.name)}">
-      <input type="text" class="ac-club" value="${escapeHtml(card.club || '')}">
-      <input type="text" class="ac-pos" maxlength="3" value="${escapeHtml(card.pos || 'DEL')}" style="max-width:50px; text-align:center;">
-      <input type="number" class="ac-rating" min="1" max="99" value="${card.rating || 80}" style="max-width:60px;">
-      <input type="number" class="ac-price" min="1" value="${card.price || 100}" style="max-width:80px;">
-      <input type="color" class="ac-c1" value="${card.c1 || '#8ee7ff'}">
-      <input type="color" class="ac-c2" value="${card.c2 || '#ffb3d9'}">
-      <button class="admin-btn ac-toggle ${card.available ? 'on' : ''}">${card.available ? '🟢' : '🔴'}</button>
-      <div class="a-actions">
-        <button class="admin-btn primary ac-save">💾</button>
-        <button class="admin-btn danger ac-del">🗑️</button>
-      </div>`;
-    list.appendChild(row);
+buildThemeGrid();
 
-    row.querySelector('.ac-save').addEventListener('click', async () => {
-      try{
-        await updateDoc(doc(db, 'shopCards', card.id), {
-          emoji: row.querySelector('.ac-emoji').value.trim().slice(0,4) || '⚽',
-          name: row.querySelector('.ac-name').value.trim() || 'Sin nombre',
-          club: row.querySelector('.ac-club').value.trim() || '—',
-          pos: row.querySelector('.ac-pos').value.trim().toUpperCase().slice(0,3) || 'DEL',
-          rating: Math.max(1, Math.min(99, parseInt(row.querySelector('.ac-rating').value) || 1)),
-          price: Math.max(1, parseInt(row.querySelector('.ac-price').value) || 1),
-          c1: row.querySelector('.ac-c1').value,
-          c2: row.querySelector('.ac-c2').value
-        });
-        toast('Luicard actualizada ✅');
-      }catch(e){ toast('Error'); }
-    });
-    row.querySelector('.ac-toggle').addEventListener('click', async () => {
-      try{ await updateDoc(doc(db, 'shopCards', card.id), { available: !card.available }); }
-      catch(e){ toast('Error'); }
-    });
-    row.querySelector('.ac-del').addEventListener('click', async () => {
-      if(!confirm(`¿Borrar "${card.name}"?`)) return;
-      try{ await deleteDoc(doc(db, 'shopCards', card.id)); toast('Eliminada'); }
-      catch(e){ toast('Error'); }
-    });
+/* ========== SUBIDA DE IMÁGENES ========== */
+function setupImageUpload(fileInputId, urlInputId, previewId, statusId) {
+  $(fileInputId).addEventListener("change", async (e) => {
+    const file = e.target.files[0];
+    e.target.value = "";
+    if (!file) return;
+    if (!file.type.startsWith("image/")) return toast("Debe ser una imagen", "error");
+    if (file.size > 2 * 1024 * 1024) return toast("Máximo 2MB", "error");
+    const status = $(statusId);
+    status.textContent = "⏳ Subiendo...";
+    status.style.color = "var(--muted)";
+    try {
+      const ext = (file.name.split(".").pop() || "jpg").toLowerCase();
+      const path = `cards/${Date.now()}_${Math.random().toString(36).slice(2, 8)}.${ext}`;
+      const imageRef = sRef(storage, path);
+      await uploadBytes(imageRef, file, { contentType: file.type });
+      const url = await getDownloadURL(imageRef);
+      $(urlInputId).value = url;
+      $(previewId).innerHTML = `<img src="${esc(url)}" alt="">`;
+      status.textContent = "✓ Imagen subida";
+      status.style.color = "#22c55e";
+    } catch (err) {
+      status.textContent = "Error: " + err.message;
+      status.style.color = "#fca5a5";
+    }
+  });
+
+  $(urlInputId).addEventListener("input", () => {
+    const url = $(urlInputId).value.trim();
+    if (url) $(previewId).innerHTML = `<img src="${esc(url)}" alt="" onerror="this.parentElement.innerHTML=''">`;
+    else $(previewId).innerHTML = "";
   });
 }
 
-$('addCardBtn').addEventListener('click', async () => {
-  const name = $('newCardName').value.trim();
-  if(!name){ toast('Falta el nombre'); return; }
-  const id = 'c_' + Math.random().toString(36).slice(2,9);
-  try{
-    await setDoc(doc(db, 'shopCards', id), {
-      id,
-      emoji: $('newCardEmoji').value.trim().slice(0,4) || '⚽',
-      name,
-      club: $('newCardClub').value.trim() || '—',
-      pos: ($('newCardPos').value.trim().toUpperCase().slice(0,3)) || 'DEL',
-      rating: Math.max(1, Math.min(99, parseInt($('newCardRating').value) || 80)),
-      price: Math.max(1, parseInt($('newCardPrice').value) || 100),
-      c1: $('newCardC1').value,
-      c2: $('newCardC2').value,
-      available: true
+setupImageUpload("shopImageFile", "shopImageUrl", "shopImagePreview", "shopImageStatus");
+setupImageUpload("giveImageFile", "giveImageUrl", "giveImagePreview", "giveImageStatus");
+
+$("btnShopUpload").addEventListener("click", () => $("shopImageFile").click());
+$("btnGiveUpload").addEventListener("click", () => $("giveImageFile").click());
+
+/* ========== ADMIN ========== */
+async function loadAdminPanel() {
+  if (!isAdmin) return;
+  try {
+    const snap = await getDocs(collection(db, "users"));
+    allUsersCache = snap.docs.map(d => ({ id: d.id, ...d.data() }))
+      .sort((a, b) => (a.displayName || "").localeCompare(b.displayName || ""));
+    const opts = allUsersCache
+      .map(u => `<option value="${esc(u.id)}">${esc(u.displayName || u.email || u.id)} — 🪙 ${fmt(u.coins || 0)}</option>`)
+      .join("");
+    $("coinUserSelect").innerHTML = opts;
+    $("cardUserSelect").innerHTML = opts;
+    if (currentUser) {
+      $("coinUserSelect").value = currentUser.uid;
+      $("cardUserSelect").value = currentUser.uid;
+    }
+    renderAdminShop();
+    await renderAllCards();
+  } catch (e) { console.error(e); }
+}
+
+function renderAdminShop() {
+  const el = $("adminShopList");
+  if (!shopItemsCache.length) {
+    el.innerHTML = `<div class="empty" style="grid-column:1/-1">🛒<p>No hay cartas en la tienda todavía.</p></div>`;
+    return;
+  }
+  el.innerHTML = "";
+  shopItemsCache.forEach(item => {
+    const wrap = document.createElement("div");
+    wrap.className = "card-wrap";
+    wrap.appendChild(cardEl(item, { interactive: false }));
+    const info = document.createElement("div");
+    info.className = "card-owner";
+    info.textContent = `🪙 ${fmt(item.price)} · ${item.stock === -1 ? "∞" : item.stock + " uds"}`;
+    const controls = document.createElement("div");
+    controls.style.display = "flex";
+    controls.style.gap = "6px";
+    const edit = document.createElement("button");
+    edit.className = "btn small";
+    edit.textContent = "✏️ Editar";
+    edit.addEventListener("click", () => loadShopItemToForm(item));
+    const del = document.createElement("button");
+    del.className = "btn small danger";
+    del.textContent = "🗑️";
+    del.addEventListener("click", () => deleteShopItem(item));
+    controls.appendChild(edit);
+    controls.appendChild(del);
+    wrap.appendChild(info);
+    wrap.appendChild(controls);
+    el.appendChild(wrap);
+  });
+}
+
+async function renderAllCards() {
+  const el = $("allCards");
+  el.innerHTML = Array(4).fill('<div class="skeleton skeleton-card"></div>').join("");
+  try {
+    const snap = await getDocs(collection(db, "cards"));
+    const cards = snap.docs.map(d => ({ id: d.id, ...d.data() })).sort(byCreatedDesc);
+    el.innerHTML = "";
+    if (!cards.length) {
+      el.innerHTML = `<div class="empty" style="grid-column:1/-1">🃏<p>No hay LuiCards creadas todavía.</p></div>`;
+      return;
+    }
+    cards.forEach(c => {
+      const wrap = document.createElement("div");
+      wrap.className = "card-wrap";
+      wrap.appendChild(cardEl(c));
+      const owner = allUsersCache.find(u => u.id === c.ownerUid);
+      const ownerLabel = document.createElement("div");
+      ownerLabel.className = "card-owner";
+      ownerLabel.textContent = "→ " + (owner ? (owner.displayName || owner.email) : "desconocido");
+      const del = document.createElement("button");
+      del.className = "btn small danger";
+      del.textContent = "🗑️ Eliminar";
+      del.addEventListener("click", async (e) => {
+        e.stopPropagation();
+        if (!confirm(`¿Eliminar la LuiCard "${c.name}" del usuario?`)) return;
+        try {
+          await deleteDoc(doc(db, "cards", c.id));
+          toast("LuiCard eliminada", "success");
+          await renderAllCards();
+        } catch (err) { toast("Error: " + err.message, "error"); }
+      });
+      wrap.appendChild(ownerLabel);
+      wrap.appendChild(del);
+      el.appendChild(wrap);
     });
-    ['newCardName','newCardClub','newCardPos','newCardRating','newCardPrice'].forEach(x => $(x).value = '');
-    toast(`Luicard "${name}" agregada ✅`);
-  }catch(e){ toast('Error'); }
+  } catch (e) {
+    el.innerHTML = `<div class="empty" style="grid-column:1/-1">⚠️<p>Error al cargar las cartas.</p></div>`;
+  }
+}
+
+/* ========== ADMIN: publicar/editar tienda ========== */
+function loadShopItemToForm(item) {
+  editingShopId = item.id;
+  $("shopName").value = item.name || "";
+  $("shopRarity").value = item.rarity || "common";
+  $("shopImageUrl").value = item.imageUrl || "";
+  $("shopDesc").value = item.description || "";
+  $("shopPrice").value = item.price || 100;
+  $("shopStock").value = item.stock ?? -1;
+  $("shopImagePreview").innerHTML = item.imageUrl ? `<img src="${esc(item.imageUrl)}" alt="">` : "";
+  $("shopImageStatus").textContent = "Editando carta existente";
+  $("shopImageStatus").style.color = "var(--muted)";
+  $("adminShopFormTitle").textContent = "✏️ Editando: " + (item.name || "carta");
+  $("btnPublishShop").textContent = "💾 Guardar cambios";
+  $("btnCancelEdit").classList.remove("hidden");
+  $("adminShopFormTitle").scrollIntoView({ behavior: "smooth", block: "center" });
+}
+
+function resetShopForm() {
+  editingShopId = null;
+  $("shopName").value = "";
+  $("shopRarity").value = "common";
+  $("shopImageUrl").value = "";
+  $("shopDesc").value = "";
+  $("shopPrice").value = 100;
+  $("shopStock").value = -1;
+  $("shopImagePreview").innerHTML = "";
+  $("shopImageStatus").textContent = "JPG, PNG, GIF, WebP · máx 2MB";
+  $("shopImageStatus").style.color = "var(--muted)";
+  $("adminShopFormTitle").textContent = "🛒 Publicar LuiCard en tienda";
+  $("btnPublishShop").textContent = "🛒 Publicar en tienda";
+  $("btnCancelEdit").classList.add("hidden");
+}
+
+$("btnCancelEdit").addEventListener("click", resetShopForm);
+
+$("btnPublishShop").addEventListener("click", async () => {
+  if (!isAdmin) return;
+  const name = $("shopName").value.trim();
+  const rarity = $("shopRarity").value;
+  const imageUrl = $("shopImageUrl").value.trim();
+  const description = $("shopDesc").value.trim();
+  const price = parseInt($("shopPrice").value, 10);
+  const stock = parseInt($("shopStock").value, 10);
+  if (!name) return toast("Falta el nombre de la carta", "error");
+  if (!price || price < 1) return toast("Precio inválido", "error");
+  if (isNaN(stock) || stock < -1) return toast("Stock inválido (usa -1 para ∞)", "error");
+
+  const data = { name, rarity, imageUrl, description, price, stock };
+  try {
+    if (editingShopId) {
+      await updateDoc(doc(db, "shop", editingShopId), data);
+      toast("Carta actualizada en la tienda", "success");
+    } else {
+      await addDoc(collection(db, "shop"), {
+        ...data,
+        createdAt: serverTimestamp(),
+        createdBy: currentUser.uid
+      });
+      toast("Carta publicada en la tienda", "success");
+    }
+    resetShopForm();
+  } catch (e) {
+    toast("Error: " + e.message, "error");
+  }
 });
 
-/* =========================================================
-   ADMIN: ITEMS
-========================================================= */
-function renderAdminItems(){
-  const list = $('adminItemsList');
-  list.innerHTML = '';
-  if(!shopItems.length){
-    list.innerHTML = '<p style="color:var(--muted);font-size:.85rem">No hay items cargados.</p>';
-    return;
+async function deleteShopItem(item) {
+  if (!confirm(`¿Eliminar "${item.name}" de la tienda?\n\n(las cartas ya compradas NO se borran)`)) return;
+  try {
+    await deleteDoc(doc(db, "shop", item.id));
+    if (item.imageUrl && item.imageUrl.includes("firebasestorage.googleapis.com")) {
+      try { await deleteObject(sRef(storage, item.imageUrl)); } catch (e) { /* ignore */ }
+    }
+    toast("Eliminado de la tienda", "success");
+    if (editingShopId === item.id) resetShopForm();
+  } catch (e) {
+    toast("Error: " + e.message, "error");
   }
-  shopItems.forEach(item => {
-    const row = document.createElement('div');
-    row.className = 'admin-row';
-    row.innerHTML = `
-      <input type="text" class="it-emoji" maxlength="4" value="${item.emoji || '🎁'}" style="max-width:50px; text-align:center;">
-      <input type="text" class="it-name" value="${escapeHtml(item.name)}">
-      <input type="text" class="it-desc" value="${escapeHtml(item.description || '')}">
-      <input type="text" class="it-cat" value="${escapeHtml(item.category || '')}">
-      <input type="number" class="it-price" min="1" value="${item.price || 100}" style="max-width:80px;">
-      <input type="color" class="it-c1" value="${item.c1 || '#ffe98a'}">
-      <input type="color" class="it-c2" value="${item.c2 || '#ffb3b3'}">
-      <button class="admin-btn it-toggle ${item.available ? 'on' : ''}">${item.available ? '🟢' : '🔴'}</button>
-      <div class="a-actions">
-        <button class="admin-btn primary it-save">💾</button>
-        <button class="admin-btn danger it-del">🗑️</button>
-      </div>`;
-    list.appendChild(row);
-
-    row.querySelector('.it-save').addEventListener('click', async () => {
-      try{
-        await updateDoc(doc(db, 'shopItems', item.id), {
-          emoji: row.querySelector('.it-emoji').value.trim().slice(0,4) || '🎁',
-          name: row.querySelector('.it-name').value.trim() || 'Item',
-          description: row.querySelector('.it-desc').value.trim().slice(0,80),
-          category: row.querySelector('.it-cat').value.trim().toUpperCase().slice(0,12),
-          price: Math.max(1, parseInt(row.querySelector('.it-price').value) || 1),
-          c1: row.querySelector('.it-c1').value,
-          c2: row.querySelector('.it-c2').value
-        });
-        toast('Item actualizado ✅');
-      }catch(e){ toast('Error'); }
-    });
-    row.querySelector('.it-toggle').addEventListener('click', async () => {
-      try{ await updateDoc(doc(db, 'shopItems', item.id), { available: !item.available }); }
-      catch(e){ toast('Error'); }
-    });
-    row.querySelector('.it-del').addEventListener('click', async () => {
-      if(!confirm(`¿Borrar "${item.name}"?`)) return;
-      try{ await deleteDoc(doc(db, 'shopItems', item.id)); toast('Eliminado'); }
-      catch(e){ toast('Error'); }
-    });
-  });
 }
 
-$('addItemBtn').addEventListener('click', async () => {
-  const name = $('newItemName').value.trim();
-  if(!name){ toast('Falta el nombre del item'); return; }
-  const id = 'i_' + Math.random().toString(36).slice(2,9);
-  try{
-    await setDoc(doc(db, 'shopItems', id), {
-      id,
-      emoji: $('newItemEmoji').value.trim().slice(0,4) || '🎁',
-      name,
-      description: $('newItemDesc').value.trim().slice(0,80),
-      category: $('newItemCat').value.trim().toUpperCase().slice(0,12),
-      price: Math.max(1, parseInt($('newItemPrice').value) || 100),
-      c1: $('newItemC1').value,
-      c2: $('newItemC2').value,
-      available: true
+/* ========== ADMIN: dar/quit coins ========== */
+$("btnGiveCoins").addEventListener("click", () => adjustCoins(1));
+$("btnTakeCoins").addEventListener("click", () => adjustCoins(-1));
+
+async function adjustCoins(sign) {
+  const uid = $("coinUserSelect").value;
+  const amount = Math.abs(parseInt($("coinAmount").value, 10));
+  if (!uid) return toast("Selecciona un usuario", "error");
+  if (!amount || isNaN(amount)) return toast("Cantidad inválida", "error");
+  try {
+    await updateDoc(doc(db, "users", uid), { coins: increment(sign * amount) });
+    toast(`${sign > 0 ? "Dados" : "Quitados"} ${fmt(amount)} LuiCoins`, "success");
+    loadAdminPanel();
+  } catch (e) { toast("Error: " + e.message, "error"); }
+}
+
+/* ========== ADMIN: dar carta directa ========== */
+$("btnCreateCard").addEventListener("click", async () => {
+  if (!isAdmin) return;
+  const uid = $("cardUserSelect").value;
+  const name = $("cardName").value.trim();
+  const rarity = $("cardRarity").value;
+  const imageUrl = $("giveImageUrl").value.trim();
+  const description = $("cardDesc").value.trim();
+  if (!uid || !name) return toast("Selecciona usuario y escribe un nombre", "error");
+  const owner = allUsersCache.find(u => u.id === uid);
+  try {
+    await addDoc(collection(db, "cards"), {
+      ownerUid: uid,
+      ownerName: owner?.displayName || "",
+      name, rarity, imageUrl, description,
+      createdAt: serverTimestamp()
     });
-    ['newItemName','newItemDesc','newItemCat','newItemPrice'].forEach(x => $(x).value = '');
-    toast(`Item "${name}" agregado ✅`);
-  }catch(e){ toast('Error'); }
+    toast("LuiCard creada y asignada", "success");
+    $("cardName").value = "";
+    $("giveImageUrl").value = "";
+    $("giveImagePreview").innerHTML = "";
+    $("cardDesc").value = "";
+    await renderAllCards();
+  } catch (e) { toast("Error: " + e.message, "error"); }
 });
 </script>
 </body>
